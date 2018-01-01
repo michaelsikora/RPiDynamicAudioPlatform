@@ -1,0 +1,20 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+../include/pca9685.h
+
+/home/pi/projects/audioTest/src/calibrate.c
+pca9685.h
+/home/pi/projects/audioTest/src/pca9685.h
+wiringPi.h
+-
+stdio.h
+-
+stdlib.h
+-
+
