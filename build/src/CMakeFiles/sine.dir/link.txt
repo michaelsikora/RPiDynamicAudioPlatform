@@ -1,0 +1,1 @@
+/usr/bin/c++      CMakeFiles/sine.dir/sine.cpp.o  -o ../../bin/sine -rdynamic -lrtaudio -lrtaudio -lrtaudio 

@@ -63,16 +63,16 @@ CMAKE_BINARY_DIR = /home/pi/projects/audioTest/build
 # Directory level rules for directory src
 
 # Convenience name for "all" pass in the directory.
-src/all: src/CMakeFiles/audioTest.dir/all
-src/all: src/CMakeFiles/calibrate.dir/all
-src/all: src/CMakeFiles/audioprobe.dir/all
+src/all: src/CMakeFiles/threshold.dir/all
+src/all: src/CMakeFiles/sine.dir/all
+src/all: src/CMakeFiles/callbacktest.dir/all
 
 .PHONY : src/all
 
 # Convenience name for "clean" pass in the directory.
-src/clean: src/CMakeFiles/audioTest.dir/clean
-src/clean: src/CMakeFiles/calibrate.dir/clean
-src/clean: src/CMakeFiles/audioprobe.dir/clean
+src/clean: src/CMakeFiles/threshold.dir/clean
+src/clean: src/CMakeFiles/sine.dir/clean
+src/clean: src/CMakeFiles/callbacktest.dir/clean
 
 .PHONY : src/clean
 
@@ -82,113 +82,113 @@ src/preinstall:
 .PHONY : src/preinstall
 
 #=============================================================================
-# Target rules for target src/CMakeFiles/audioTest.dir
+# Target rules for target src/CMakeFiles/threshold.dir
 
 # All Build rule for target.
-src/CMakeFiles/audioTest.dir/all:
-	$(MAKE) -f src/CMakeFiles/audioTest.dir/build.make src/CMakeFiles/audioTest.dir/depend
-	$(MAKE) -f src/CMakeFiles/audioTest.dir/build.make src/CMakeFiles/audioTest.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/pi/projects/audioTest/build/CMakeFiles --progress-num=1,2 "Built target audioTest"
-.PHONY : src/CMakeFiles/audioTest.dir/all
+src/CMakeFiles/threshold.dir/all:
+	$(MAKE) -f src/CMakeFiles/threshold.dir/build.make src/CMakeFiles/threshold.dir/depend
+	$(MAKE) -f src/CMakeFiles/threshold.dir/build.make src/CMakeFiles/threshold.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/pi/projects/audioTest/build/CMakeFiles --progress-num=5,6 "Built target threshold"
+.PHONY : src/CMakeFiles/threshold.dir/all
 
 # Include target in all.
-all: src/CMakeFiles/audioTest.dir/all
+all: src/CMakeFiles/threshold.dir/all
 
 .PHONY : all
 
 # Build rule for subdir invocation for target.
-src/CMakeFiles/audioTest.dir/rule: cmake_check_build_system
+src/CMakeFiles/threshold.dir/rule: cmake_check_build_system
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/pi/projects/audioTest/build/CMakeFiles 2
-	$(MAKE) -f CMakeFiles/Makefile2 src/CMakeFiles/audioTest.dir/all
+	$(MAKE) -f CMakeFiles/Makefile2 src/CMakeFiles/threshold.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/pi/projects/audioTest/build/CMakeFiles 0
-.PHONY : src/CMakeFiles/audioTest.dir/rule
+.PHONY : src/CMakeFiles/threshold.dir/rule
 
 # Convenience name for target.
-audioTest: src/CMakeFiles/audioTest.dir/rule
+threshold: src/CMakeFiles/threshold.dir/rule
 
-.PHONY : audioTest
-
-# clean rule for target.
-src/CMakeFiles/audioTest.dir/clean:
-	$(MAKE) -f src/CMakeFiles/audioTest.dir/build.make src/CMakeFiles/audioTest.dir/clean
-.PHONY : src/CMakeFiles/audioTest.dir/clean
+.PHONY : threshold
 
 # clean rule for target.
-clean: src/CMakeFiles/audioTest.dir/clean
+src/CMakeFiles/threshold.dir/clean:
+	$(MAKE) -f src/CMakeFiles/threshold.dir/build.make src/CMakeFiles/threshold.dir/clean
+.PHONY : src/CMakeFiles/threshold.dir/clean
+
+# clean rule for target.
+clean: src/CMakeFiles/threshold.dir/clean
 
 .PHONY : clean
 
 #=============================================================================
-# Target rules for target src/CMakeFiles/calibrate.dir
+# Target rules for target src/CMakeFiles/sine.dir
 
 # All Build rule for target.
-src/CMakeFiles/calibrate.dir/all:
-	$(MAKE) -f src/CMakeFiles/calibrate.dir/build.make src/CMakeFiles/calibrate.dir/depend
-	$(MAKE) -f src/CMakeFiles/calibrate.dir/build.make src/CMakeFiles/calibrate.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/pi/projects/audioTest/build/CMakeFiles --progress-num=5,6 "Built target calibrate"
-.PHONY : src/CMakeFiles/calibrate.dir/all
+src/CMakeFiles/sine.dir/all:
+	$(MAKE) -f src/CMakeFiles/sine.dir/build.make src/CMakeFiles/sine.dir/depend
+	$(MAKE) -f src/CMakeFiles/sine.dir/build.make src/CMakeFiles/sine.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/pi/projects/audioTest/build/CMakeFiles --progress-num=3,4 "Built target sine"
+.PHONY : src/CMakeFiles/sine.dir/all
 
 # Include target in all.
-all: src/CMakeFiles/calibrate.dir/all
+all: src/CMakeFiles/sine.dir/all
 
 .PHONY : all
 
 # Build rule for subdir invocation for target.
-src/CMakeFiles/calibrate.dir/rule: cmake_check_build_system
+src/CMakeFiles/sine.dir/rule: cmake_check_build_system
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/pi/projects/audioTest/build/CMakeFiles 2
-	$(MAKE) -f CMakeFiles/Makefile2 src/CMakeFiles/calibrate.dir/all
+	$(MAKE) -f CMakeFiles/Makefile2 src/CMakeFiles/sine.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/pi/projects/audioTest/build/CMakeFiles 0
-.PHONY : src/CMakeFiles/calibrate.dir/rule
+.PHONY : src/CMakeFiles/sine.dir/rule
 
 # Convenience name for target.
-calibrate: src/CMakeFiles/calibrate.dir/rule
+sine: src/CMakeFiles/sine.dir/rule
 
-.PHONY : calibrate
-
-# clean rule for target.
-src/CMakeFiles/calibrate.dir/clean:
-	$(MAKE) -f src/CMakeFiles/calibrate.dir/build.make src/CMakeFiles/calibrate.dir/clean
-.PHONY : src/CMakeFiles/calibrate.dir/clean
+.PHONY : sine
 
 # clean rule for target.
-clean: src/CMakeFiles/calibrate.dir/clean
+src/CMakeFiles/sine.dir/clean:
+	$(MAKE) -f src/CMakeFiles/sine.dir/build.make src/CMakeFiles/sine.dir/clean
+.PHONY : src/CMakeFiles/sine.dir/clean
+
+# clean rule for target.
+clean: src/CMakeFiles/sine.dir/clean
 
 .PHONY : clean
 
 #=============================================================================
-# Target rules for target src/CMakeFiles/audioprobe.dir
+# Target rules for target src/CMakeFiles/callbacktest.dir
 
 # All Build rule for target.
-src/CMakeFiles/audioprobe.dir/all:
-	$(MAKE) -f src/CMakeFiles/audioprobe.dir/build.make src/CMakeFiles/audioprobe.dir/depend
-	$(MAKE) -f src/CMakeFiles/audioprobe.dir/build.make src/CMakeFiles/audioprobe.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/pi/projects/audioTest/build/CMakeFiles --progress-num=3,4 "Built target audioprobe"
-.PHONY : src/CMakeFiles/audioprobe.dir/all
+src/CMakeFiles/callbacktest.dir/all:
+	$(MAKE) -f src/CMakeFiles/callbacktest.dir/build.make src/CMakeFiles/callbacktest.dir/depend
+	$(MAKE) -f src/CMakeFiles/callbacktest.dir/build.make src/CMakeFiles/callbacktest.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/pi/projects/audioTest/build/CMakeFiles --progress-num=1,2 "Built target callbacktest"
+.PHONY : src/CMakeFiles/callbacktest.dir/all
 
 # Include target in all.
-all: src/CMakeFiles/audioprobe.dir/all
+all: src/CMakeFiles/callbacktest.dir/all
 
 .PHONY : all
 
 # Build rule for subdir invocation for target.
-src/CMakeFiles/audioprobe.dir/rule: cmake_check_build_system
+src/CMakeFiles/callbacktest.dir/rule: cmake_check_build_system
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/pi/projects/audioTest/build/CMakeFiles 2
-	$(MAKE) -f CMakeFiles/Makefile2 src/CMakeFiles/audioprobe.dir/all
+	$(MAKE) -f CMakeFiles/Makefile2 src/CMakeFiles/callbacktest.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/pi/projects/audioTest/build/CMakeFiles 0
-.PHONY : src/CMakeFiles/audioprobe.dir/rule
+.PHONY : src/CMakeFiles/callbacktest.dir/rule
 
 # Convenience name for target.
-audioprobe: src/CMakeFiles/audioprobe.dir/rule
+callbacktest: src/CMakeFiles/callbacktest.dir/rule
 
-.PHONY : audioprobe
-
-# clean rule for target.
-src/CMakeFiles/audioprobe.dir/clean:
-	$(MAKE) -f src/CMakeFiles/audioprobe.dir/build.make src/CMakeFiles/audioprobe.dir/clean
-.PHONY : src/CMakeFiles/audioprobe.dir/clean
+.PHONY : callbacktest
 
 # clean rule for target.
-clean: src/CMakeFiles/audioprobe.dir/clean
+src/CMakeFiles/callbacktest.dir/clean:
+	$(MAKE) -f src/CMakeFiles/callbacktest.dir/build.make src/CMakeFiles/callbacktest.dir/clean
+.PHONY : src/CMakeFiles/callbacktest.dir/clean
+
+# clean rule for target.
+clean: src/CMakeFiles/callbacktest.dir/clean
 
 .PHONY : clean
 

@@ -1,0 +1,1 @@
+/usr/bin/c++      CMakeFiles/threshold.dir/threshold.cpp.o  -o ../../bin/threshold -rdynamic -lrtaudio -lrtaudio -lrtaudio -lwiringPi -lwiringPi -lwiringPiPca9685 

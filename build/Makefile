@@ -111,43 +111,43 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named audioTest
+# Target rules for targets named threshold
 
 # Build rule for target.
-audioTest: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 audioTest
-.PHONY : audioTest
+threshold: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 threshold
+.PHONY : threshold
 
 # fast build rule for target.
-audioTest/fast:
-	$(MAKE) -f src/CMakeFiles/audioTest.dir/build.make src/CMakeFiles/audioTest.dir/build
-.PHONY : audioTest/fast
+threshold/fast:
+	$(MAKE) -f src/CMakeFiles/threshold.dir/build.make src/CMakeFiles/threshold.dir/build
+.PHONY : threshold/fast
 
 #=============================================================================
-# Target rules for targets named calibrate
+# Target rules for targets named sine
 
 # Build rule for target.
-calibrate: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 calibrate
-.PHONY : calibrate
+sine: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 sine
+.PHONY : sine
 
 # fast build rule for target.
-calibrate/fast:
-	$(MAKE) -f src/CMakeFiles/calibrate.dir/build.make src/CMakeFiles/calibrate.dir/build
-.PHONY : calibrate/fast
+sine/fast:
+	$(MAKE) -f src/CMakeFiles/sine.dir/build.make src/CMakeFiles/sine.dir/build
+.PHONY : sine/fast
 
 #=============================================================================
-# Target rules for targets named audioprobe
+# Target rules for targets named callbacktest
 
 # Build rule for target.
-audioprobe: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 audioprobe
-.PHONY : audioprobe
+callbacktest: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 callbacktest
+.PHONY : callbacktest
 
 # fast build rule for target.
-audioprobe/fast:
-	$(MAKE) -f src/CMakeFiles/audioprobe.dir/build.make src/CMakeFiles/audioprobe.dir/build
-.PHONY : audioprobe/fast
+callbacktest/fast:
+	$(MAKE) -f src/CMakeFiles/callbacktest.dir/build.make src/CMakeFiles/callbacktest.dir/build
+.PHONY : callbacktest/fast
 
 # Help Target
 help:
@@ -157,9 +157,9 @@ help:
 	@echo "... depend"
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
-	@echo "... audioTest"
-	@echo "... calibrate"
-	@echo "... audioprobe"
+	@echo "... threshold"
+	@echo "... sine"
+	@echo "... callbacktest"
 .PHONY : help
 
 

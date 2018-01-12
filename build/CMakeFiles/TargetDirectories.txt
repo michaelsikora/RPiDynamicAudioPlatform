@@ -1,7 +1,7 @@
 /home/pi/projects/audioTest/build/CMakeFiles/rebuild_cache.dir
 /home/pi/projects/audioTest/build/CMakeFiles/edit_cache.dir
-/home/pi/projects/audioTest/build/src/CMakeFiles/rebuild_cache.dir
-/home/pi/projects/audioTest/build/src/CMakeFiles/audioTest.dir
-/home/pi/projects/audioTest/build/src/CMakeFiles/calibrate.dir
-/home/pi/projects/audioTest/build/src/CMakeFiles/audioprobe.dir
+/home/pi/projects/audioTest/build/src/CMakeFiles/threshold.dir
+/home/pi/projects/audioTest/build/src/CMakeFiles/sine.dir
 /home/pi/projects/audioTest/build/src/CMakeFiles/edit_cache.dir
+/home/pi/projects/audioTest/build/src/CMakeFiles/rebuild_cache.dir
+/home/pi/projects/audioTest/build/src/CMakeFiles/callbacktest.dir

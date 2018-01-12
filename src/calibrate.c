@@ -37,7 +37,7 @@
 
 #define PIN_BASE 300
 #define MAX_PWM 4096
-#define HERTZ 50
+#define HERTZ 60
 
 /**
  * Calculate the number of ticks the signal should be high for the required amount of time
@@ -76,7 +76,7 @@ int main(void)
 
 		if (pin >= 0 && pin <= 16)
 		{
-			millis = 1.5f;
+			millis = 1.78f;
 			i = 1;
 
 			pwmWrite(PIN_BASE + pin, calcTicks(millis, HERTZ));
@@ -87,7 +87,7 @@ int main(void)
 				printf("Enter milliseconds: ");
 				scanf("%f", &millis);
 
-				if (millis > 0 && millis <= 3)
+				if (millis > 0 && millis <= 16)
 				{
 					pwmWrite(PIN_BASE + pin, calcTicks(millis, HERTZ));
 					delay(1000);

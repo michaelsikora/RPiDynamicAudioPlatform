@@ -43,7 +43,7 @@ set(CMAKE_MAKEFILE_PRODUCTS
 
 # Dependency information for all targets:
 set(CMAKE_DEPEND_INFO_FILES
-  "src/CMakeFiles/audioTest.dir/DependInfo.cmake"
-  "src/CMakeFiles/calibrate.dir/DependInfo.cmake"
-  "src/CMakeFiles/audioprobe.dir/DependInfo.cmake"
+  "src/CMakeFiles/threshold.dir/DependInfo.cmake"
+  "src/CMakeFiles/sine.dir/DependInfo.cmake"
+  "src/CMakeFiles/callbacktest.dir/DependInfo.cmake"
   )

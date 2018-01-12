@@ -56,17 +56,6 @@ CMAKE_BINARY_DIR = /home/pi/projects/audioTest/build
 #=============================================================================
 # Targets provided globally by CMake.
 
-# Special rule for the target rebuild_cache
-rebuild_cache:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
-	/usr/bin/cmake -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
-.PHONY : rebuild_cache
-
-# Special rule for the target rebuild_cache
-rebuild_cache/fast: rebuild_cache
-
-.PHONY : rebuild_cache/fast
-
 # Special rule for the target edit_cache
 edit_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
@@ -77,6 +66,17 @@ edit_cache:
 edit_cache/fast: edit_cache
 
 .PHONY : edit_cache/fast
+
+# Special rule for the target rebuild_cache
+rebuild_cache:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
+	/usr/bin/cmake -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+.PHONY : rebuild_cache
+
+# Special rule for the target rebuild_cache
+rebuild_cache/fast: rebuild_cache
+
+.PHONY : rebuild_cache/fast
 
 # The main all target
 all: cmake_check_build_system
@@ -111,130 +111,130 @@ depend:
 .PHONY : depend
 
 # Convenience name for target.
-src/CMakeFiles/audioTest.dir/rule:
-	cd /home/pi/projects/audioTest/build && $(MAKE) -f CMakeFiles/Makefile2 src/CMakeFiles/audioTest.dir/rule
-.PHONY : src/CMakeFiles/audioTest.dir/rule
+src/CMakeFiles/threshold.dir/rule:
+	cd /home/pi/projects/audioTest/build && $(MAKE) -f CMakeFiles/Makefile2 src/CMakeFiles/threshold.dir/rule
+.PHONY : src/CMakeFiles/threshold.dir/rule
 
 # Convenience name for target.
-audioTest: src/CMakeFiles/audioTest.dir/rule
+threshold: src/CMakeFiles/threshold.dir/rule
 
-.PHONY : audioTest
+.PHONY : threshold
 
 # fast build rule for target.
-audioTest/fast:
-	cd /home/pi/projects/audioTest/build && $(MAKE) -f src/CMakeFiles/audioTest.dir/build.make src/CMakeFiles/audioTest.dir/build
-.PHONY : audioTest/fast
+threshold/fast:
+	cd /home/pi/projects/audioTest/build && $(MAKE) -f src/CMakeFiles/threshold.dir/build.make src/CMakeFiles/threshold.dir/build
+.PHONY : threshold/fast
 
 # Convenience name for target.
-src/CMakeFiles/calibrate.dir/rule:
-	cd /home/pi/projects/audioTest/build && $(MAKE) -f CMakeFiles/Makefile2 src/CMakeFiles/calibrate.dir/rule
-.PHONY : src/CMakeFiles/calibrate.dir/rule
+src/CMakeFiles/sine.dir/rule:
+	cd /home/pi/projects/audioTest/build && $(MAKE) -f CMakeFiles/Makefile2 src/CMakeFiles/sine.dir/rule
+.PHONY : src/CMakeFiles/sine.dir/rule
 
 # Convenience name for target.
-calibrate: src/CMakeFiles/calibrate.dir/rule
+sine: src/CMakeFiles/sine.dir/rule
 
-.PHONY : calibrate
+.PHONY : sine
 
 # fast build rule for target.
-calibrate/fast:
-	cd /home/pi/projects/audioTest/build && $(MAKE) -f src/CMakeFiles/calibrate.dir/build.make src/CMakeFiles/calibrate.dir/build
-.PHONY : calibrate/fast
+sine/fast:
+	cd /home/pi/projects/audioTest/build && $(MAKE) -f src/CMakeFiles/sine.dir/build.make src/CMakeFiles/sine.dir/build
+.PHONY : sine/fast
 
 # Convenience name for target.
-src/CMakeFiles/audioprobe.dir/rule:
-	cd /home/pi/projects/audioTest/build && $(MAKE) -f CMakeFiles/Makefile2 src/CMakeFiles/audioprobe.dir/rule
-.PHONY : src/CMakeFiles/audioprobe.dir/rule
+src/CMakeFiles/callbacktest.dir/rule:
+	cd /home/pi/projects/audioTest/build && $(MAKE) -f CMakeFiles/Makefile2 src/CMakeFiles/callbacktest.dir/rule
+.PHONY : src/CMakeFiles/callbacktest.dir/rule
 
 # Convenience name for target.
-audioprobe: src/CMakeFiles/audioprobe.dir/rule
+callbacktest: src/CMakeFiles/callbacktest.dir/rule
 
-.PHONY : audioprobe
+.PHONY : callbacktest
 
 # fast build rule for target.
-audioprobe/fast:
-	cd /home/pi/projects/audioTest/build && $(MAKE) -f src/CMakeFiles/audioprobe.dir/build.make src/CMakeFiles/audioprobe.dir/build
-.PHONY : audioprobe/fast
+callbacktest/fast:
+	cd /home/pi/projects/audioTest/build && $(MAKE) -f src/CMakeFiles/callbacktest.dir/build.make src/CMakeFiles/callbacktest.dir/build
+.PHONY : callbacktest/fast
 
-audioprobe.o: audioprobe.cpp.o
+callbacktest.o: callbacktest.cpp.o
 
-.PHONY : audioprobe.o
-
-# target to build an object file
-audioprobe.cpp.o:
-	cd /home/pi/projects/audioTest/build && $(MAKE) -f src/CMakeFiles/audioprobe.dir/build.make src/CMakeFiles/audioprobe.dir/audioprobe.cpp.o
-.PHONY : audioprobe.cpp.o
-
-audioprobe.i: audioprobe.cpp.i
-
-.PHONY : audioprobe.i
-
-# target to preprocess a source file
-audioprobe.cpp.i:
-	cd /home/pi/projects/audioTest/build && $(MAKE) -f src/CMakeFiles/audioprobe.dir/build.make src/CMakeFiles/audioprobe.dir/audioprobe.cpp.i
-.PHONY : audioprobe.cpp.i
-
-audioprobe.s: audioprobe.cpp.s
-
-.PHONY : audioprobe.s
-
-# target to generate assembly for a file
-audioprobe.cpp.s:
-	cd /home/pi/projects/audioTest/build && $(MAKE) -f src/CMakeFiles/audioprobe.dir/build.make src/CMakeFiles/audioprobe.dir/audioprobe.cpp.s
-.PHONY : audioprobe.cpp.s
-
-calibrate.o: calibrate.c.o
-
-.PHONY : calibrate.o
+.PHONY : callbacktest.o
 
 # target to build an object file
-calibrate.c.o:
-	cd /home/pi/projects/audioTest/build && $(MAKE) -f src/CMakeFiles/calibrate.dir/build.make src/CMakeFiles/calibrate.dir/calibrate.c.o
-.PHONY : calibrate.c.o
+callbacktest.cpp.o:
+	cd /home/pi/projects/audioTest/build && $(MAKE) -f src/CMakeFiles/callbacktest.dir/build.make src/CMakeFiles/callbacktest.dir/callbacktest.cpp.o
+.PHONY : callbacktest.cpp.o
 
-calibrate.i: calibrate.c.i
+callbacktest.i: callbacktest.cpp.i
 
-.PHONY : calibrate.i
+.PHONY : callbacktest.i
 
 # target to preprocess a source file
-calibrate.c.i:
-	cd /home/pi/projects/audioTest/build && $(MAKE) -f src/CMakeFiles/calibrate.dir/build.make src/CMakeFiles/calibrate.dir/calibrate.c.i
-.PHONY : calibrate.c.i
+callbacktest.cpp.i:
+	cd /home/pi/projects/audioTest/build && $(MAKE) -f src/CMakeFiles/callbacktest.dir/build.make src/CMakeFiles/callbacktest.dir/callbacktest.cpp.i
+.PHONY : callbacktest.cpp.i
 
-calibrate.s: calibrate.c.s
+callbacktest.s: callbacktest.cpp.s
 
-.PHONY : calibrate.s
+.PHONY : callbacktest.s
 
 # target to generate assembly for a file
-calibrate.c.s:
-	cd /home/pi/projects/audioTest/build && $(MAKE) -f src/CMakeFiles/calibrate.dir/build.make src/CMakeFiles/calibrate.dir/calibrate.c.s
-.PHONY : calibrate.c.s
+callbacktest.cpp.s:
+	cd /home/pi/projects/audioTest/build && $(MAKE) -f src/CMakeFiles/callbacktest.dir/build.make src/CMakeFiles/callbacktest.dir/callbacktest.cpp.s
+.PHONY : callbacktest.cpp.s
 
-main.o: main.c.o
+sine.o: sine.cpp.o
 
-.PHONY : main.o
+.PHONY : sine.o
 
 # target to build an object file
-main.c.o:
-	cd /home/pi/projects/audioTest/build && $(MAKE) -f src/CMakeFiles/audioTest.dir/build.make src/CMakeFiles/audioTest.dir/main.c.o
-.PHONY : main.c.o
+sine.cpp.o:
+	cd /home/pi/projects/audioTest/build && $(MAKE) -f src/CMakeFiles/sine.dir/build.make src/CMakeFiles/sine.dir/sine.cpp.o
+.PHONY : sine.cpp.o
 
-main.i: main.c.i
+sine.i: sine.cpp.i
 
-.PHONY : main.i
+.PHONY : sine.i
 
 # target to preprocess a source file
-main.c.i:
-	cd /home/pi/projects/audioTest/build && $(MAKE) -f src/CMakeFiles/audioTest.dir/build.make src/CMakeFiles/audioTest.dir/main.c.i
-.PHONY : main.c.i
+sine.cpp.i:
+	cd /home/pi/projects/audioTest/build && $(MAKE) -f src/CMakeFiles/sine.dir/build.make src/CMakeFiles/sine.dir/sine.cpp.i
+.PHONY : sine.cpp.i
 
-main.s: main.c.s
+sine.s: sine.cpp.s
 
-.PHONY : main.s
+.PHONY : sine.s
 
 # target to generate assembly for a file
-main.c.s:
-	cd /home/pi/projects/audioTest/build && $(MAKE) -f src/CMakeFiles/audioTest.dir/build.make src/CMakeFiles/audioTest.dir/main.c.s
-.PHONY : main.c.s
+sine.cpp.s:
+	cd /home/pi/projects/audioTest/build && $(MAKE) -f src/CMakeFiles/sine.dir/build.make src/CMakeFiles/sine.dir/sine.cpp.s
+.PHONY : sine.cpp.s
+
+threshold.o: threshold.cpp.o
+
+.PHONY : threshold.o
+
+# target to build an object file
+threshold.cpp.o:
+	cd /home/pi/projects/audioTest/build && $(MAKE) -f src/CMakeFiles/threshold.dir/build.make src/CMakeFiles/threshold.dir/threshold.cpp.o
+.PHONY : threshold.cpp.o
+
+threshold.i: threshold.cpp.i
+
+.PHONY : threshold.i
+
+# target to preprocess a source file
+threshold.cpp.i:
+	cd /home/pi/projects/audioTest/build && $(MAKE) -f src/CMakeFiles/threshold.dir/build.make src/CMakeFiles/threshold.dir/threshold.cpp.i
+.PHONY : threshold.cpp.i
+
+threshold.s: threshold.cpp.s
+
+.PHONY : threshold.s
+
+# target to generate assembly for a file
+threshold.cpp.s:
+	cd /home/pi/projects/audioTest/build && $(MAKE) -f src/CMakeFiles/threshold.dir/build.make src/CMakeFiles/threshold.dir/threshold.cpp.s
+.PHONY : threshold.cpp.s
 
 # Help Target
 help:
@@ -242,20 +242,20 @@ help:
 	@echo "... all (the default if no target is provided)"
 	@echo "... clean"
 	@echo "... depend"
-	@echo "... rebuild_cache"
-	@echo "... audioTest"
-	@echo "... calibrate"
-	@echo "... audioprobe"
+	@echo "... threshold"
+	@echo "... sine"
 	@echo "... edit_cache"
-	@echo "... audioprobe.o"
-	@echo "... audioprobe.i"
-	@echo "... audioprobe.s"
-	@echo "... calibrate.o"
-	@echo "... calibrate.i"
-	@echo "... calibrate.s"
-	@echo "... main.o"
-	@echo "... main.i"
-	@echo "... main.s"
+	@echo "... rebuild_cache"
+	@echo "... callbacktest"
+	@echo "... callbacktest.o"
+	@echo "... callbacktest.i"
+	@echo "... callbacktest.s"
+	@echo "... sine.o"
+	@echo "... sine.i"
+	@echo "... sine.s"
+	@echo "... threshold.o"
+	@echo "... threshold.i"
+	@echo "... threshold.s"
 .PHONY : help
 
 

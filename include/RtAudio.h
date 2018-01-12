@@ -45,6 +45,10 @@
 #ifndef __RTAUDIO_H
 #define __RTAUDIO_H
 
+//#ifdef __cplusplus
+//extern "C" {
+//#endif
+
 #define RTAUDIO_VERSION "4.1.2"
 
 #include <string>
@@ -1153,6 +1157,10 @@ public:
 };
 
 #endif
+
+//#ifdef __cplusplus
+//}
+//#endif
 
 #endif
 
