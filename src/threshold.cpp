@@ -14,6 +14,7 @@
 
 #include "pca9685.h"
 #include <wiringPi.h>
+#define NUM_THREADS 2
 
 #if defined(__cplusplus)
 extern "C" {
@@ -160,33 +161,18 @@ int setupServos(){
 	return 0;
 }
 
-void *audioTask() {
-    audio->openStream(outParam, inParam, RTAUDIO_FLOAT32, 44100,
-     		      &bufsize, rtaudio_callback_LP, &data);     		      
- 
-    audio->startStream();
-}
-
-int
-main(void)
-{
-    RtAudio *audio;
+void *audioTask(void* value) {
+	RtAudio *audio;
     unsigned int bufsize = 4096;
     CallbackData data;
-
-    data.nRate = 44100;
-    data.nFrame = 44100;
-    data.nChannel = outParam->nChannels;
     
     try {
 	audio = new RtAudio(RtAudio::MACOSX_CORE);
     }catch  (RtAudioError e){
 	fprintf(stderr, "fail to create RtAudio: %s¥n", e.what());
-	return 1;
     }
     if (!audio){
 	fprintf(stderr, "fail to allocate RtAudio¥n");
-	return 1;
     }
     
     /* probe audio devices */
@@ -200,8 +186,45 @@ main(void)
     outParam->nChannels = 2;
     inParam->deviceId = devId;
     inParam->nChannels = 2;
+    
+    data.nRate = 44100;
+    data.nFrame = 44100;
+    data.nChannel = outParam->nChannels;
+    
+    audio->openStream(outParam, inParam, RTAUDIO_FLOAT32, 44100,
+     		      &bufsize, rtaudio_callback_LP, &data);     		      
+ 
+    audio->startStream();
+    
+        std::cout << "Press Return to quit" << std::endl;
+    while(!isInterrupted) {
+		if(kbhit()) {
+			char c = getchar();
+			if(c == '\n') {
+				isInterrupted = true;
+			}
+		}
+	}
+	
+    sleep(0.1);
+	
+	std::cout << "cleaning up" << std::endl;
+    audio->stopStream();
+    audio->closeStream();
+    delete audio;
+	std::cout << "done cleaning up" << std::endl;
+	
+}
 
-
+int
+main(int argc, char *argv[])
+{  
+	pthread_t tid[NUM_THREADS];
+	int rc;
+	int t;
+	
+	rc = pthread_create(tid,NULL,audioTask,(void *) t);
+	pthread_exit(NULL);
 
 	setupServos();
     int pin = 1;
@@ -218,24 +241,7 @@ main(void)
 		delay(20);
 	}
     
-    std::cout << "Press Return to quit" << std::endl;
-    while(!isInterrupted) {
-		if(kbhit()) {
-			char c = getchar();
-			if(c == '\n') {
-				isInterrupted = true;
-			}
-		}
-	}
 	pwmWrite(PIN_BASE + pin, calcTicks(minis, HERTZ));	
-	
-	
-	sleep(0.1);
-	std::cout << "cleaning up" << std::endl;
-    audio->stopStream();
-    audio->closeStream();
-    delete audio;
-	std::cout << "done cleaning up" << std::endl;
 	
     return 0;
 }
