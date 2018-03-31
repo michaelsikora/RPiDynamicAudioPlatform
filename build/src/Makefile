@@ -56,17 +56,6 @@ CMAKE_BINARY_DIR = /home/pi/projects/audioTest/build
 #=============================================================================
 # Targets provided globally by CMake.
 
-# Special rule for the target edit_cache
-edit_cache:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
-	/usr/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
-.PHONY : edit_cache
-
-# Special rule for the target edit_cache
-edit_cache/fast: edit_cache
-
-.PHONY : edit_cache/fast
-
 # Special rule for the target rebuild_cache
 rebuild_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
@@ -77,6 +66,17 @@ rebuild_cache:
 rebuild_cache/fast: rebuild_cache
 
 .PHONY : rebuild_cache/fast
+
+# Special rule for the target edit_cache
+edit_cache:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
+	/usr/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+.PHONY : edit_cache
+
+# Special rule for the target edit_cache
+edit_cache/fast: edit_cache
+
+.PHONY : edit_cache/fast
 
 # The main all target
 all: cmake_check_build_system
@@ -111,130 +111,46 @@ depend:
 .PHONY : depend
 
 # Convenience name for target.
-src/CMakeFiles/threshold.dir/rule:
-	cd /home/pi/projects/audioTest/build && $(MAKE) -f CMakeFiles/Makefile2 src/CMakeFiles/threshold.dir/rule
-.PHONY : src/CMakeFiles/threshold.dir/rule
+src/CMakeFiles/audioPlatform.dir/rule:
+	cd /home/pi/projects/audioTest/build && $(MAKE) -f CMakeFiles/Makefile2 src/CMakeFiles/audioPlatform.dir/rule
+.PHONY : src/CMakeFiles/audioPlatform.dir/rule
 
 # Convenience name for target.
-threshold: src/CMakeFiles/threshold.dir/rule
+audioPlatform: src/CMakeFiles/audioPlatform.dir/rule
 
-.PHONY : threshold
+.PHONY : audioPlatform
 
 # fast build rule for target.
-threshold/fast:
-	cd /home/pi/projects/audioTest/build && $(MAKE) -f src/CMakeFiles/threshold.dir/build.make src/CMakeFiles/threshold.dir/build
-.PHONY : threshold/fast
+audioPlatform/fast:
+	cd /home/pi/projects/audioTest/build && $(MAKE) -f src/CMakeFiles/audioPlatform.dir/build.make src/CMakeFiles/audioPlatform.dir/build
+.PHONY : audioPlatform/fast
 
-# Convenience name for target.
-src/CMakeFiles/sine.dir/rule:
-	cd /home/pi/projects/audioTest/build && $(MAKE) -f CMakeFiles/Makefile2 src/CMakeFiles/sine.dir/rule
-.PHONY : src/CMakeFiles/sine.dir/rule
+audioPlatform.o: audioPlatform.cpp.o
 
-# Convenience name for target.
-sine: src/CMakeFiles/sine.dir/rule
-
-.PHONY : sine
-
-# fast build rule for target.
-sine/fast:
-	cd /home/pi/projects/audioTest/build && $(MAKE) -f src/CMakeFiles/sine.dir/build.make src/CMakeFiles/sine.dir/build
-.PHONY : sine/fast
-
-# Convenience name for target.
-src/CMakeFiles/callbacktest.dir/rule:
-	cd /home/pi/projects/audioTest/build && $(MAKE) -f CMakeFiles/Makefile2 src/CMakeFiles/callbacktest.dir/rule
-.PHONY : src/CMakeFiles/callbacktest.dir/rule
-
-# Convenience name for target.
-callbacktest: src/CMakeFiles/callbacktest.dir/rule
-
-.PHONY : callbacktest
-
-# fast build rule for target.
-callbacktest/fast:
-	cd /home/pi/projects/audioTest/build && $(MAKE) -f src/CMakeFiles/callbacktest.dir/build.make src/CMakeFiles/callbacktest.dir/build
-.PHONY : callbacktest/fast
-
-callbacktest.o: callbacktest.cpp.o
-
-.PHONY : callbacktest.o
+.PHONY : audioPlatform.o
 
 # target to build an object file
-callbacktest.cpp.o:
-	cd /home/pi/projects/audioTest/build && $(MAKE) -f src/CMakeFiles/callbacktest.dir/build.make src/CMakeFiles/callbacktest.dir/callbacktest.cpp.o
-.PHONY : callbacktest.cpp.o
+audioPlatform.cpp.o:
+	cd /home/pi/projects/audioTest/build && $(MAKE) -f src/CMakeFiles/audioPlatform.dir/build.make src/CMakeFiles/audioPlatform.dir/audioPlatform.cpp.o
+.PHONY : audioPlatform.cpp.o
 
-callbacktest.i: callbacktest.cpp.i
+audioPlatform.i: audioPlatform.cpp.i
 
-.PHONY : callbacktest.i
-
-# target to preprocess a source file
-callbacktest.cpp.i:
-	cd /home/pi/projects/audioTest/build && $(MAKE) -f src/CMakeFiles/callbacktest.dir/build.make src/CMakeFiles/callbacktest.dir/callbacktest.cpp.i
-.PHONY : callbacktest.cpp.i
-
-callbacktest.s: callbacktest.cpp.s
-
-.PHONY : callbacktest.s
-
-# target to generate assembly for a file
-callbacktest.cpp.s:
-	cd /home/pi/projects/audioTest/build && $(MAKE) -f src/CMakeFiles/callbacktest.dir/build.make src/CMakeFiles/callbacktest.dir/callbacktest.cpp.s
-.PHONY : callbacktest.cpp.s
-
-sine.o: sine.cpp.o
-
-.PHONY : sine.o
-
-# target to build an object file
-sine.cpp.o:
-	cd /home/pi/projects/audioTest/build && $(MAKE) -f src/CMakeFiles/sine.dir/build.make src/CMakeFiles/sine.dir/sine.cpp.o
-.PHONY : sine.cpp.o
-
-sine.i: sine.cpp.i
-
-.PHONY : sine.i
+.PHONY : audioPlatform.i
 
 # target to preprocess a source file
-sine.cpp.i:
-	cd /home/pi/projects/audioTest/build && $(MAKE) -f src/CMakeFiles/sine.dir/build.make src/CMakeFiles/sine.dir/sine.cpp.i
-.PHONY : sine.cpp.i
+audioPlatform.cpp.i:
+	cd /home/pi/projects/audioTest/build && $(MAKE) -f src/CMakeFiles/audioPlatform.dir/build.make src/CMakeFiles/audioPlatform.dir/audioPlatform.cpp.i
+.PHONY : audioPlatform.cpp.i
 
-sine.s: sine.cpp.s
+audioPlatform.s: audioPlatform.cpp.s
 
-.PHONY : sine.s
-
-# target to generate assembly for a file
-sine.cpp.s:
-	cd /home/pi/projects/audioTest/build && $(MAKE) -f src/CMakeFiles/sine.dir/build.make src/CMakeFiles/sine.dir/sine.cpp.s
-.PHONY : sine.cpp.s
-
-threshold.o: threshold.cpp.o
-
-.PHONY : threshold.o
-
-# target to build an object file
-threshold.cpp.o:
-	cd /home/pi/projects/audioTest/build && $(MAKE) -f src/CMakeFiles/threshold.dir/build.make src/CMakeFiles/threshold.dir/threshold.cpp.o
-.PHONY : threshold.cpp.o
-
-threshold.i: threshold.cpp.i
-
-.PHONY : threshold.i
-
-# target to preprocess a source file
-threshold.cpp.i:
-	cd /home/pi/projects/audioTest/build && $(MAKE) -f src/CMakeFiles/threshold.dir/build.make src/CMakeFiles/threshold.dir/threshold.cpp.i
-.PHONY : threshold.cpp.i
-
-threshold.s: threshold.cpp.s
-
-.PHONY : threshold.s
+.PHONY : audioPlatform.s
 
 # target to generate assembly for a file
-threshold.cpp.s:
-	cd /home/pi/projects/audioTest/build && $(MAKE) -f src/CMakeFiles/threshold.dir/build.make src/CMakeFiles/threshold.dir/threshold.cpp.s
-.PHONY : threshold.cpp.s
+audioPlatform.cpp.s:
+	cd /home/pi/projects/audioTest/build && $(MAKE) -f src/CMakeFiles/audioPlatform.dir/build.make src/CMakeFiles/audioPlatform.dir/audioPlatform.cpp.s
+.PHONY : audioPlatform.cpp.s
 
 # Help Target
 help:
@@ -242,20 +158,12 @@ help:
 	@echo "... all (the default if no target is provided)"
 	@echo "... clean"
 	@echo "... depend"
-	@echo "... threshold"
-	@echo "... sine"
-	@echo "... edit_cache"
 	@echo "... rebuild_cache"
-	@echo "... callbacktest"
-	@echo "... callbacktest.o"
-	@echo "... callbacktest.i"
-	@echo "... callbacktest.s"
-	@echo "... sine.o"
-	@echo "... sine.i"
-	@echo "... sine.s"
-	@echo "... threshold.o"
-	@echo "... threshold.i"
-	@echo "... threshold.s"
+	@echo "... edit_cache"
+	@echo "... audioPlatform"
+	@echo "... audioPlatform.o"
+	@echo "... audioPlatform.i"
+	@echo "... audioPlatform.s"
 .PHONY : help
 
 

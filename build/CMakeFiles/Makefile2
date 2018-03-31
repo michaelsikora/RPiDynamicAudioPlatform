@@ -63,16 +63,12 @@ CMAKE_BINARY_DIR = /home/pi/projects/audioTest/build
 # Directory level rules for directory src
 
 # Convenience name for "all" pass in the directory.
-src/all: src/CMakeFiles/threshold.dir/all
-src/all: src/CMakeFiles/sine.dir/all
-src/all: src/CMakeFiles/callbacktest.dir/all
+src/all: src/CMakeFiles/audioPlatform.dir/all
 
 .PHONY : src/all
 
 # Convenience name for "clean" pass in the directory.
-src/clean: src/CMakeFiles/threshold.dir/clean
-src/clean: src/CMakeFiles/sine.dir/clean
-src/clean: src/CMakeFiles/callbacktest.dir/clean
+src/clean: src/CMakeFiles/audioPlatform.dir/clean
 
 .PHONY : src/clean
 
@@ -82,113 +78,39 @@ src/preinstall:
 .PHONY : src/preinstall
 
 #=============================================================================
-# Target rules for target src/CMakeFiles/threshold.dir
+# Target rules for target src/CMakeFiles/audioPlatform.dir
 
 # All Build rule for target.
-src/CMakeFiles/threshold.dir/all:
-	$(MAKE) -f src/CMakeFiles/threshold.dir/build.make src/CMakeFiles/threshold.dir/depend
-	$(MAKE) -f src/CMakeFiles/threshold.dir/build.make src/CMakeFiles/threshold.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/pi/projects/audioTest/build/CMakeFiles --progress-num=5,6 "Built target threshold"
-.PHONY : src/CMakeFiles/threshold.dir/all
+src/CMakeFiles/audioPlatform.dir/all:
+	$(MAKE) -f src/CMakeFiles/audioPlatform.dir/build.make src/CMakeFiles/audioPlatform.dir/depend
+	$(MAKE) -f src/CMakeFiles/audioPlatform.dir/build.make src/CMakeFiles/audioPlatform.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/pi/projects/audioTest/build/CMakeFiles --progress-num=1,2 "Built target audioPlatform"
+.PHONY : src/CMakeFiles/audioPlatform.dir/all
 
 # Include target in all.
-all: src/CMakeFiles/threshold.dir/all
+all: src/CMakeFiles/audioPlatform.dir/all
 
 .PHONY : all
 
 # Build rule for subdir invocation for target.
-src/CMakeFiles/threshold.dir/rule: cmake_check_build_system
+src/CMakeFiles/audioPlatform.dir/rule: cmake_check_build_system
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/pi/projects/audioTest/build/CMakeFiles 2
-	$(MAKE) -f CMakeFiles/Makefile2 src/CMakeFiles/threshold.dir/all
+	$(MAKE) -f CMakeFiles/Makefile2 src/CMakeFiles/audioPlatform.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/pi/projects/audioTest/build/CMakeFiles 0
-.PHONY : src/CMakeFiles/threshold.dir/rule
+.PHONY : src/CMakeFiles/audioPlatform.dir/rule
 
 # Convenience name for target.
-threshold: src/CMakeFiles/threshold.dir/rule
+audioPlatform: src/CMakeFiles/audioPlatform.dir/rule
 
-.PHONY : threshold
-
-# clean rule for target.
-src/CMakeFiles/threshold.dir/clean:
-	$(MAKE) -f src/CMakeFiles/threshold.dir/build.make src/CMakeFiles/threshold.dir/clean
-.PHONY : src/CMakeFiles/threshold.dir/clean
+.PHONY : audioPlatform
 
 # clean rule for target.
-clean: src/CMakeFiles/threshold.dir/clean
-
-.PHONY : clean
-
-#=============================================================================
-# Target rules for target src/CMakeFiles/sine.dir
-
-# All Build rule for target.
-src/CMakeFiles/sine.dir/all:
-	$(MAKE) -f src/CMakeFiles/sine.dir/build.make src/CMakeFiles/sine.dir/depend
-	$(MAKE) -f src/CMakeFiles/sine.dir/build.make src/CMakeFiles/sine.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/pi/projects/audioTest/build/CMakeFiles --progress-num=3,4 "Built target sine"
-.PHONY : src/CMakeFiles/sine.dir/all
-
-# Include target in all.
-all: src/CMakeFiles/sine.dir/all
-
-.PHONY : all
-
-# Build rule for subdir invocation for target.
-src/CMakeFiles/sine.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/pi/projects/audioTest/build/CMakeFiles 2
-	$(MAKE) -f CMakeFiles/Makefile2 src/CMakeFiles/sine.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/pi/projects/audioTest/build/CMakeFiles 0
-.PHONY : src/CMakeFiles/sine.dir/rule
-
-# Convenience name for target.
-sine: src/CMakeFiles/sine.dir/rule
-
-.PHONY : sine
+src/CMakeFiles/audioPlatform.dir/clean:
+	$(MAKE) -f src/CMakeFiles/audioPlatform.dir/build.make src/CMakeFiles/audioPlatform.dir/clean
+.PHONY : src/CMakeFiles/audioPlatform.dir/clean
 
 # clean rule for target.
-src/CMakeFiles/sine.dir/clean:
-	$(MAKE) -f src/CMakeFiles/sine.dir/build.make src/CMakeFiles/sine.dir/clean
-.PHONY : src/CMakeFiles/sine.dir/clean
-
-# clean rule for target.
-clean: src/CMakeFiles/sine.dir/clean
-
-.PHONY : clean
-
-#=============================================================================
-# Target rules for target src/CMakeFiles/callbacktest.dir
-
-# All Build rule for target.
-src/CMakeFiles/callbacktest.dir/all:
-	$(MAKE) -f src/CMakeFiles/callbacktest.dir/build.make src/CMakeFiles/callbacktest.dir/depend
-	$(MAKE) -f src/CMakeFiles/callbacktest.dir/build.make src/CMakeFiles/callbacktest.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/pi/projects/audioTest/build/CMakeFiles --progress-num=1,2 "Built target callbacktest"
-.PHONY : src/CMakeFiles/callbacktest.dir/all
-
-# Include target in all.
-all: src/CMakeFiles/callbacktest.dir/all
-
-.PHONY : all
-
-# Build rule for subdir invocation for target.
-src/CMakeFiles/callbacktest.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/pi/projects/audioTest/build/CMakeFiles 2
-	$(MAKE) -f CMakeFiles/Makefile2 src/CMakeFiles/callbacktest.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/pi/projects/audioTest/build/CMakeFiles 0
-.PHONY : src/CMakeFiles/callbacktest.dir/rule
-
-# Convenience name for target.
-callbacktest: src/CMakeFiles/callbacktest.dir/rule
-
-.PHONY : callbacktest
-
-# clean rule for target.
-src/CMakeFiles/callbacktest.dir/clean:
-	$(MAKE) -f src/CMakeFiles/callbacktest.dir/build.make src/CMakeFiles/callbacktest.dir/clean
-.PHONY : src/CMakeFiles/callbacktest.dir/clean
-
-# clean rule for target.
-clean: src/CMakeFiles/callbacktest.dir/clean
+clean: src/CMakeFiles/audioPlatform.dir/clean
 
 .PHONY : clean
 

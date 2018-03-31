@@ -80,7 +80,7 @@ int input( void * /*outputBuffer*/, void *inputBuffer, unsigned int nBufferFrame
   }
 
   unsigned long offset = iData->frameCounter * iData->channels;
-  memcpy( iData->buffer+offset, inputBuffer, iData->bufferBytes );
+  std::memcpy( iData->buffer+offset, inputBuffer, iData->bufferBytes );
   iData->frameCounter += frames;
 
   if ( iData->frameCounter >= iData->totalFrames ) return 2;

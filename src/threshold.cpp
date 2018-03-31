@@ -191,7 +191,7 @@ void *audioTask(void* value) {
     data.nFrame = 44100;
     data.nChannel = outParam->nChannels;
     
-    audio->openStream(outParam, inParam, RTAUDIO_FLOAT32, 44100,
+    audio->openStream(outParam, inParam, RTAUDIO_FLOAT32, 16000,
      		      &bufsize, rtaudio_callback_LP, &data);     		      
  
     audio->startStream();
@@ -219,12 +219,12 @@ void *audioTask(void* value) {
 int
 main(int argc, char *argv[])
 {  
-	pthread_t tid[NUM_THREADS];
-	int rc;
-	int t;
+	//pthread_t tid[NUM_THREADS];
+	//int rc;
+	//int t;
 	
-	rc = pthread_create(tid,NULL,audioTask,(void *) t);
-	pthread_exit(NULL);
+	//rc = pthread_create(tid,NULL,audioTask,(void *) t);
+	//pthread_exit(NULL);
 
 	setupServos();
     int pin = 1;

@@ -111,43 +111,17 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named threshold
+# Target rules for targets named audioPlatform
 
 # Build rule for target.
-threshold: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 threshold
-.PHONY : threshold
+audioPlatform: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 audioPlatform
+.PHONY : audioPlatform
 
 # fast build rule for target.
-threshold/fast:
-	$(MAKE) -f src/CMakeFiles/threshold.dir/build.make src/CMakeFiles/threshold.dir/build
-.PHONY : threshold/fast
-
-#=============================================================================
-# Target rules for targets named sine
-
-# Build rule for target.
-sine: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 sine
-.PHONY : sine
-
-# fast build rule for target.
-sine/fast:
-	$(MAKE) -f src/CMakeFiles/sine.dir/build.make src/CMakeFiles/sine.dir/build
-.PHONY : sine/fast
-
-#=============================================================================
-# Target rules for targets named callbacktest
-
-# Build rule for target.
-callbacktest: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 callbacktest
-.PHONY : callbacktest
-
-# fast build rule for target.
-callbacktest/fast:
-	$(MAKE) -f src/CMakeFiles/callbacktest.dir/build.make src/CMakeFiles/callbacktest.dir/build
-.PHONY : callbacktest/fast
+audioPlatform/fast:
+	$(MAKE) -f src/CMakeFiles/audioPlatform.dir/build.make src/CMakeFiles/audioPlatform.dir/build
+.PHONY : audioPlatform/fast
 
 # Help Target
 help:
@@ -157,9 +131,7 @@ help:
 	@echo "... depend"
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
-	@echo "... threshold"
-	@echo "... sine"
-	@echo "... callbacktest"
+	@echo "... audioPlatform"
 .PHONY : help
 
 

@@ -1,1 +1,0 @@
-/usr/bin/c++      CMakeFiles/callbacktest.dir/callbacktest.cpp.o  -o ../../bin/callbacktest -rdynamic -lrtaudio -lrtaudio -lrtaudio 
