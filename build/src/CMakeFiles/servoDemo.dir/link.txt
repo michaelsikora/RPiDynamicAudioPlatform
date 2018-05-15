@@ -1,0 +1,1 @@
+/usr/bin/c++      CMakeFiles/servoDemo.dir/servoDemo.cpp.o  -o ../../bin/servoDemo -rdynamic -lwiringPi -lwiringPi -lwiringPiPca9685 

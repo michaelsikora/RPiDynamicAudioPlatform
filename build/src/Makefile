@@ -111,6 +111,21 @@ depend:
 .PHONY : depend
 
 # Convenience name for target.
+src/CMakeFiles/servoDemo.dir/rule:
+	cd /home/pi/projects/audioTest/build && $(MAKE) -f CMakeFiles/Makefile2 src/CMakeFiles/servoDemo.dir/rule
+.PHONY : src/CMakeFiles/servoDemo.dir/rule
+
+# Convenience name for target.
+servoDemo: src/CMakeFiles/servoDemo.dir/rule
+
+.PHONY : servoDemo
+
+# fast build rule for target.
+servoDemo/fast:
+	cd /home/pi/projects/audioTest/build && $(MAKE) -f src/CMakeFiles/servoDemo.dir/build.make src/CMakeFiles/servoDemo.dir/build
+.PHONY : servoDemo/fast
+
+# Convenience name for target.
 src/CMakeFiles/audioPlatform.dir/rule:
 	cd /home/pi/projects/audioTest/build && $(MAKE) -f CMakeFiles/Makefile2 src/CMakeFiles/audioPlatform.dir/rule
 .PHONY : src/CMakeFiles/audioPlatform.dir/rule
@@ -152,6 +167,33 @@ audioPlatform.cpp.s:
 	cd /home/pi/projects/audioTest/build && $(MAKE) -f src/CMakeFiles/audioPlatform.dir/build.make src/CMakeFiles/audioPlatform.dir/audioPlatform.cpp.s
 .PHONY : audioPlatform.cpp.s
 
+servoDemo.o: servoDemo.cpp.o
+
+.PHONY : servoDemo.o
+
+# target to build an object file
+servoDemo.cpp.o:
+	cd /home/pi/projects/audioTest/build && $(MAKE) -f src/CMakeFiles/servoDemo.dir/build.make src/CMakeFiles/servoDemo.dir/servoDemo.cpp.o
+.PHONY : servoDemo.cpp.o
+
+servoDemo.i: servoDemo.cpp.i
+
+.PHONY : servoDemo.i
+
+# target to preprocess a source file
+servoDemo.cpp.i:
+	cd /home/pi/projects/audioTest/build && $(MAKE) -f src/CMakeFiles/servoDemo.dir/build.make src/CMakeFiles/servoDemo.dir/servoDemo.cpp.i
+.PHONY : servoDemo.cpp.i
+
+servoDemo.s: servoDemo.cpp.s
+
+.PHONY : servoDemo.s
+
+# target to generate assembly for a file
+servoDemo.cpp.s:
+	cd /home/pi/projects/audioTest/build && $(MAKE) -f src/CMakeFiles/servoDemo.dir/build.make src/CMakeFiles/servoDemo.dir/servoDemo.cpp.s
+.PHONY : servoDemo.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -160,10 +202,14 @@ help:
 	@echo "... depend"
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
+	@echo "... servoDemo"
 	@echo "... audioPlatform"
 	@echo "... audioPlatform.o"
 	@echo "... audioPlatform.i"
 	@echo "... audioPlatform.s"
+	@echo "... servoDemo.o"
+	@echo "... servoDemo.i"
+	@echo "... servoDemo.s"
 .PHONY : help
 
 

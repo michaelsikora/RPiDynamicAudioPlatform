@@ -18,9 +18,21 @@
 #include <iostream>
 #include <map>
 
+#include <inttypes.h>
+#include <math.h>
+#include <sys/time.h>
+
+
 #define PIN_BASE 300
 #define MAX_PWM 4096
 #define HERTZ 60
+
+uint64_t current_timestamp() {
+    struct timespec te; 
+    clock_gettime(CLOCK_REALTIME, &te);
+    printf("nanoseconds: %lld\n", te.tv_nsec/1000000);
+    return te.tv_nsec;
+}
 
 // Calculates the length of the pulse in samples
 int calcTicks(float impulseMs, int hertz)
@@ -56,72 +68,102 @@ int main(int argc, char **argv)
 	// 2.Wait for input to start
 	printf("Type any number and enter to continue: ");
 	scanf("%d",&pin);
+	uint64_t optime;
+	uint64_t tic;
+	uint64_t toc;
+	int delayms = 200;
 	
 	// SEQUENCE 1
 	// 3.Run through orientations
-		
+			tic = current_timestamp();
 		// DEMONSTRATION SEQUENCE
 			pin = 0; // CENTERED
 			pwmWrite(PIN_BASE + pin, calcTicks(servo0[1], HERTZ)); 
 			pin = 1; // FLAT
 			pwmWrite(PIN_BASE + pin, calcTicks(servo1[0], HERTZ)); 
-			delay(500); 
+			delay(delayms); 
 			printf("Orientation 1.1\n"); 
 			pin = 2; // CENTERED
 			pwmWrite(PIN_BASE + pin, calcTicks(servo2[1], HERTZ));  
 			pin = 3; // FLAT
 			pwmWrite(PIN_BASE + pin, calcTicks(servo3[0], HERTZ));  
-			delay(500);
+			delay(delayms);
 			printf("Orientation 1.2\n"); 
-			delay(2000);			
+			//~ delay(2000);			
 			pca9685PWMReset(fd);
+			
+
+			toc = current_timestamp();
+			optime = (toc-tic)/1000000;
+			printf(" Delay: %lld ms \n", optime);
+			delay(2000);
+			tic = current_timestamp();
 			
 			pin = 0; // LEFT 90 DEGREES
 			pwmWrite(PIN_BASE + pin, calcTicks(servo0[2], HERTZ)); 
 			pin = 1; // FLAT
 			pwmWrite(PIN_BASE + pin, calcTicks(servo1[0], HERTZ));  
-			delay(500);
+			delay(delayms);
 			printf("Orientation 2.1\n");
 			pin = 2;
 			pwmWrite(PIN_BASE + pin, calcTicks(servo2[2], HERTZ));  
 			pin = 3; // FLAT
 			pwmWrite(PIN_BASE + pin, calcTicks(servo3[0], HERTZ));  
-			delay(500);
+			delay(delayms);
 			printf("Orientation 2.2\n"); 
-			delay(2000);
 			pca9685PWMReset(fd);
 			
+			
+			toc = current_timestamp();
+			optime = (toc-tic)/1000000;
+			printf(" Delay: %lld ms \n", optime);
+			delay(2000);
+			tic = current_timestamp();
+			
+			fprintf(stdout, "%u\n", (unsigned)time(NULL)); 
 			pin = 0; // RIGHT 90 DEGREES
 			pwmWrite(PIN_BASE + pin, calcTicks(servo0[0], HERTZ)); 
 			pin = 1;
 			pwmWrite(PIN_BASE + pin, calcTicks(servo1[1], HERTZ)); 
-			delay(500); 
+			delay(delayms); 
 			printf("Orientation 3.1\n");
 			pin = 2;
 			pwmWrite(PIN_BASE + pin, calcTicks(servo2[0], HERTZ));
 			pin = 3;
 			pwmWrite(PIN_BASE + pin, calcTicks(servo3[1], HERTZ));  
-			delay(500);
+			delay(delayms);
 			printf("Orientation 3.2\n"); 
-			delay(2000);
+			//~ delay(2000);
 			pca9685PWMReset(fd);
 			
+			
+			toc = current_timestamp();
+			optime = (toc-tic)/1000000;
+			printf(" Delay: %lld ms \n", optime);
+			delay(2000);
+			tic = current_timestamp();
+			
+			fprintf(stdout, "%u\n", (unsigned)time(NULL)); 
 			pin = 0; // CENTERED
 			pwmWrite(PIN_BASE + pin, calcTicks(servo0[1], HERTZ));  
 			pin = 1; // FLAT
 			pwmWrite(PIN_BASE + pin, calcTicks(servo1[0], HERTZ));  
-			delay(500);
+			delay(delayms);
 			printf("Orientation 4.1\n"); 
 			pin = 2; // CENTERED
 			pwmWrite(PIN_BASE + pin, calcTicks(servo2[1], HERTZ));  
 			pin = 3; // FLAT
 			pwmWrite(PIN_BASE + pin, calcTicks(servo3[0], HERTZ));  
-			delay(500);
+			delay(delayms);
 			printf("Orientation 4.2\n"); 
-			delay(2000);			
+			//~ delay(2000);			
 			pca9685PWMReset(fd);
+			
+			toc = current_timestamp();
+			optime = (toc-tic)/1000000;
+			printf(" Delay: %lld ms \n", optime);
 				
-	
+	fprintf(stdout, "%u\n", (unsigned)time(NULL)); 
 	// 4.Wait for input to continue ( User moves arrays to new location )
 	printf("Type any number and enter to continue: ");
 	scanf("%d", &pin);

@@ -63,11 +63,13 @@ CMAKE_BINARY_DIR = /home/pi/projects/audioTest/build
 # Directory level rules for directory src
 
 # Convenience name for "all" pass in the directory.
+src/all: src/CMakeFiles/servoDemo.dir/all
 src/all: src/CMakeFiles/audioPlatform.dir/all
 
 .PHONY : src/all
 
 # Convenience name for "clean" pass in the directory.
+src/clean: src/CMakeFiles/servoDemo.dir/clean
 src/clean: src/CMakeFiles/audioPlatform.dir/clean
 
 .PHONY : src/clean
@@ -76,6 +78,43 @@ src/clean: src/CMakeFiles/audioPlatform.dir/clean
 src/preinstall:
 
 .PHONY : src/preinstall
+
+#=============================================================================
+# Target rules for target src/CMakeFiles/servoDemo.dir
+
+# All Build rule for target.
+src/CMakeFiles/servoDemo.dir/all:
+	$(MAKE) -f src/CMakeFiles/servoDemo.dir/build.make src/CMakeFiles/servoDemo.dir/depend
+	$(MAKE) -f src/CMakeFiles/servoDemo.dir/build.make src/CMakeFiles/servoDemo.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/pi/projects/audioTest/build/CMakeFiles --progress-num=3,4 "Built target servoDemo"
+.PHONY : src/CMakeFiles/servoDemo.dir/all
+
+# Include target in all.
+all: src/CMakeFiles/servoDemo.dir/all
+
+.PHONY : all
+
+# Build rule for subdir invocation for target.
+src/CMakeFiles/servoDemo.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/pi/projects/audioTest/build/CMakeFiles 2
+	$(MAKE) -f CMakeFiles/Makefile2 src/CMakeFiles/servoDemo.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/pi/projects/audioTest/build/CMakeFiles 0
+.PHONY : src/CMakeFiles/servoDemo.dir/rule
+
+# Convenience name for target.
+servoDemo: src/CMakeFiles/servoDemo.dir/rule
+
+.PHONY : servoDemo
+
+# clean rule for target.
+src/CMakeFiles/servoDemo.dir/clean:
+	$(MAKE) -f src/CMakeFiles/servoDemo.dir/build.make src/CMakeFiles/servoDemo.dir/clean
+.PHONY : src/CMakeFiles/servoDemo.dir/clean
+
+# clean rule for target.
+clean: src/CMakeFiles/servoDemo.dir/clean
+
+.PHONY : clean
 
 #=============================================================================
 # Target rules for target src/CMakeFiles/audioPlatform.dir

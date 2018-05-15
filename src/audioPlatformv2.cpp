@@ -1,8 +1,8 @@
 /*
- * audioPlatform.c
+ * audioPlatformv2.c 
  * 
  * Programmer: Michael Sikora <m.sikora@uky.edu>
- * Date: 2018.05.04
+ * Date: 2018.05.23
  * Title: audioPlatform
  * Research for: Dr. Kevin D. Donohue at University of Kentucky
  * 
@@ -22,25 +22,9 @@
 
 // The following Formats can be used to record the raw audio data by
 // uncommenting the two lines desired.
-/*
-typedef char MY_TYPE;
-#define FORMAT RTAUDIO_SINT8
 
-typedef signed short MY_TYPE;
-#define FORMAT RTAUDIO_SINT16
-
-typedef S24 MY_TYPE;
-#define FORMAT RTAUDIO_SINT24
-
-typedef signed long MY_TYPE;
-#define FORMAT RTAUDIO_SINT32
-*/
 typedef float MY_TYPE;
 #define FORMAT RTAUDIO_FLOAT32
-/*
-typedef double MY_TYPE;
-#define FORMAT RTAUDIO_FLOAT64
-*/
 
 // Platform-dependent sleep routines, used when recording audio
 #if defined( __WINDOWS_ASIO__ ) || defined( __WINDOWS_DS__ ) || defined( __WINDOWS_WASAPI__ )
@@ -310,4 +294,3 @@ int main(int argc, char **argv)
 	leave(adc, data);
 	return 0;
 }
-
