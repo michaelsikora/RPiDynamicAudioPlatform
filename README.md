@@ -36,3 +36,28 @@ Cmake was used to compile. The RtAudio and PCA9685 libraries are needed.
  Idea for future version is to have a menu to select which sequence to run
  so that several tests can be saved
 
+ 
+ Version 2:
+ 
+ threads:
+ 1. AUDIO - Audio thread runs a callback with 3 input channels recording and 1
+	output channel playing a wav/raw audio file.
+
+ 2. PAN-TILT - Control thread for the PCA9685 PWM driver.
+ 
+ 3. ANALYSIS - (extra) run SRP algorithm and determine SNR
+ 
+ function:
+ 1. (extra)  share struct between threads to tell:
+	-PAN-TILT Current Orientation
+	-PAN-TILT Moving flag
+	-PAN-TILT Orientation Queue (next orientation)
+	-PAN-TILT Platform setup id for SNR algorithm
+	-AUDIO Recording in progress flag
+	-AUDIO counter for completed recording processes (or amount of data captured)
+	
+	requires semaphore/mutexes
+	
+ 2. Run a predefined sequence of orientations and record/play processes
+ 
+	faster to implement
