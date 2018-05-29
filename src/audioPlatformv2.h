@@ -53,4 +53,6 @@ void resetStream(RtAudio &adc, InputData &data, RtAudio::StreamParameters &iPara
 // Function to pause program and wait for user input
 inline void WaitEnter() { std::cout << "Press Enter to continue..."; while (std::cin.get()!='\n'); }
 
+void* task_AUDIO(void* arg);
 
+void* task_PANTILT(void* arg);

@@ -21,26 +21,30 @@
 #include <iostream>
 #include <vector>
 #include <ctime> // For using time/Date in filenames
-#include <pthread_t>
+#include <pthread_t> // POSIX multi-threading
+
+pthread_mutex_t mutex1 = PTHREAD_MUTEX_INITIALIZER;
+int count = 0;
 
 //////////////////////////////////////////////////
 int main(int argc, char **argv)
 {
-	
 	int err;
 	pthread_t thread1, thread2;
 	
-	if ((err = pthread_create(&thread1, NULL, &audio_task, NULL)) != 0) // Error occurs
+	// Create Threads
+	if ((err = pthread_create(&thread1, NULL, task_AUDIO, NULL)) != 0) // Error occurs
 		printf("Thread creation failed: &s \n", strerror(err));
+	if ((err = pthread_create(&thread2, NULL, task_PANTILT, NULL)) != 0) // Error occurs
+		printf("Thread creation failed: &s \n", strerror(err));		
 		
-	
-	
-	
-	pthread_cancel(thread1);
 	pthread_join(thread1,NULL);
+	pthread_join(thread2,NULL);
 	
-	
-	
+	/*
+	pthread_cancel(thread1);
+	pthread_cancel(thread2);
+	*/
 	
 	
 /* 	// PROGRAM OUTLINE
@@ -210,8 +214,6 @@ int main(int argc, char **argv)
 }
 
 
-
-// Calculates the length of the pulse in samples from pulse width
 int calcTicks(float impulseMs, int hertz)
 {
 	float cycleMs = 1000.0f / hertz;
@@ -273,9 +275,26 @@ void resetStream(RtAudio &adc, InputData &data, RtAudio::StreamParameters &iPara
 		
 }
 
-void* ThreadStart(void* arg) {
+void* task_AUDIO(void* arg) {
 	int threadNum = *((int*)arg);
-	printf("hello world from thread %d\n", threadNum);
+	printf("hello world from AUDIO thread %d\n", threadNum);
+	
+	pthread_mutex_lock( &mutex1 );
+	counter++;
+	printf("Counter value %d\n", counter);
+	pthread_mutex_unlock( &mutex1 );
+	
+	return NULL;
+}
+
+void* task_PANTILT(void* arg) {
+	int threadNum = *((int*)arg);
+	printf("hello world from PANTILT thread %d\n", threadNum);
+
+	pthread_mutex_lock( &mutex1 );
+	counter++;
+	printf("Counter value %d\n", counter);
+	pthread_mutex_unlock( &mutex1 );
 	
 	return NULL;
 }
