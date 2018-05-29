@@ -1,12 +1,14 @@
 Engineer: Michael Sikora <m.sikora@uky.edu>
+
 Date: 2018.05.04
+
 Title: audioPlatform development code
+
 Research for: Dr. Kevin D. Donohue at University of Kentucky
-Objective: 1. To operate 2x pan-tilt servo mounts at the same time as 
-		      recording and processing audio.
-		   2. Process the received signals to obtain the coherent 
-			  response power image and adjust the pan-tilt to maximum 
-			  image SNR. 
+
+Objective: 
+1. To operate 2x pan-tilt servo mounts at the same time as recording and processing audio.
+2. Process the received signals to obtain the coherent response power image and adjust the pan-tilt to maximum image SNR. 
 			  
 			  
 Cmake was used to compile. The RtAudio and PCA9685 libraries are needed.
