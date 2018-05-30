@@ -1,1 +1,0 @@
-/usr/bin/c++      CMakeFiles/audioPlatform.dir/audioPlatform.cpp.o  -o ../../bin/audioPlatform -rdynamic -lrtaudio -lrtaudio -lrtaudio -lwiringPi -lwiringPi -lwiringPiPca9685 

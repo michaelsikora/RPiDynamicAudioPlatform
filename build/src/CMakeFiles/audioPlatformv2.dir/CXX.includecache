@@ -30,11 +30,17 @@ CoreAudio/AudioHardware.h
 
 ../include/pca9685.h
 
-/home/pi/projects/audioTest/src/audioPlatform.cpp
+/home/pi/projects/audioTest/src/audioPlatformv2.cpp
+audioPlatformv2.h
+/home/pi/projects/audioTest/src/audioPlatformv2.h
+
+/home/pi/projects/audioTest/src/audioPlatformv2.h
 pca9685.h
 /home/pi/projects/audioTest/src/pca9685.h
 RtAudio.h
 /home/pi/projects/audioTest/src/RtAudio.h
+sndfile.hh
+/home/pi/projects/audioTest/src/sndfile.hh
 wiringPi.h
 -
 cstdlib
@@ -49,7 +55,7 @@ vector
 -
 ctime
 -
-windows.h
+pthread.h
 -
 unistd.h
 -

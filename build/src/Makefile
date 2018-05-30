@@ -111,88 +111,46 @@ depend:
 .PHONY : depend
 
 # Convenience name for target.
-src/CMakeFiles/servoDemo.dir/rule:
-	cd /home/pi/projects/audioTest/build && $(MAKE) -f CMakeFiles/Makefile2 src/CMakeFiles/servoDemo.dir/rule
-.PHONY : src/CMakeFiles/servoDemo.dir/rule
+src/CMakeFiles/audioPlatformv2.dir/rule:
+	cd /home/pi/projects/audioTest/build && $(MAKE) -f CMakeFiles/Makefile2 src/CMakeFiles/audioPlatformv2.dir/rule
+.PHONY : src/CMakeFiles/audioPlatformv2.dir/rule
 
 # Convenience name for target.
-servoDemo: src/CMakeFiles/servoDemo.dir/rule
+audioPlatformv2: src/CMakeFiles/audioPlatformv2.dir/rule
 
-.PHONY : servoDemo
+.PHONY : audioPlatformv2
 
 # fast build rule for target.
-servoDemo/fast:
-	cd /home/pi/projects/audioTest/build && $(MAKE) -f src/CMakeFiles/servoDemo.dir/build.make src/CMakeFiles/servoDemo.dir/build
-.PHONY : servoDemo/fast
+audioPlatformv2/fast:
+	cd /home/pi/projects/audioTest/build && $(MAKE) -f src/CMakeFiles/audioPlatformv2.dir/build.make src/CMakeFiles/audioPlatformv2.dir/build
+.PHONY : audioPlatformv2/fast
 
-# Convenience name for target.
-src/CMakeFiles/audioPlatform.dir/rule:
-	cd /home/pi/projects/audioTest/build && $(MAKE) -f CMakeFiles/Makefile2 src/CMakeFiles/audioPlatform.dir/rule
-.PHONY : src/CMakeFiles/audioPlatform.dir/rule
+audioPlatformv2.o: audioPlatformv2.cpp.o
 
-# Convenience name for target.
-audioPlatform: src/CMakeFiles/audioPlatform.dir/rule
-
-.PHONY : audioPlatform
-
-# fast build rule for target.
-audioPlatform/fast:
-	cd /home/pi/projects/audioTest/build && $(MAKE) -f src/CMakeFiles/audioPlatform.dir/build.make src/CMakeFiles/audioPlatform.dir/build
-.PHONY : audioPlatform/fast
-
-audioPlatform.o: audioPlatform.cpp.o
-
-.PHONY : audioPlatform.o
+.PHONY : audioPlatformv2.o
 
 # target to build an object file
-audioPlatform.cpp.o:
-	cd /home/pi/projects/audioTest/build && $(MAKE) -f src/CMakeFiles/audioPlatform.dir/build.make src/CMakeFiles/audioPlatform.dir/audioPlatform.cpp.o
-.PHONY : audioPlatform.cpp.o
+audioPlatformv2.cpp.o:
+	cd /home/pi/projects/audioTest/build && $(MAKE) -f src/CMakeFiles/audioPlatformv2.dir/build.make src/CMakeFiles/audioPlatformv2.dir/audioPlatformv2.cpp.o
+.PHONY : audioPlatformv2.cpp.o
 
-audioPlatform.i: audioPlatform.cpp.i
+audioPlatformv2.i: audioPlatformv2.cpp.i
 
-.PHONY : audioPlatform.i
-
-# target to preprocess a source file
-audioPlatform.cpp.i:
-	cd /home/pi/projects/audioTest/build && $(MAKE) -f src/CMakeFiles/audioPlatform.dir/build.make src/CMakeFiles/audioPlatform.dir/audioPlatform.cpp.i
-.PHONY : audioPlatform.cpp.i
-
-audioPlatform.s: audioPlatform.cpp.s
-
-.PHONY : audioPlatform.s
-
-# target to generate assembly for a file
-audioPlatform.cpp.s:
-	cd /home/pi/projects/audioTest/build && $(MAKE) -f src/CMakeFiles/audioPlatform.dir/build.make src/CMakeFiles/audioPlatform.dir/audioPlatform.cpp.s
-.PHONY : audioPlatform.cpp.s
-
-servoDemo.o: servoDemo.cpp.o
-
-.PHONY : servoDemo.o
-
-# target to build an object file
-servoDemo.cpp.o:
-	cd /home/pi/projects/audioTest/build && $(MAKE) -f src/CMakeFiles/servoDemo.dir/build.make src/CMakeFiles/servoDemo.dir/servoDemo.cpp.o
-.PHONY : servoDemo.cpp.o
-
-servoDemo.i: servoDemo.cpp.i
-
-.PHONY : servoDemo.i
+.PHONY : audioPlatformv2.i
 
 # target to preprocess a source file
-servoDemo.cpp.i:
-	cd /home/pi/projects/audioTest/build && $(MAKE) -f src/CMakeFiles/servoDemo.dir/build.make src/CMakeFiles/servoDemo.dir/servoDemo.cpp.i
-.PHONY : servoDemo.cpp.i
+audioPlatformv2.cpp.i:
+	cd /home/pi/projects/audioTest/build && $(MAKE) -f src/CMakeFiles/audioPlatformv2.dir/build.make src/CMakeFiles/audioPlatformv2.dir/audioPlatformv2.cpp.i
+.PHONY : audioPlatformv2.cpp.i
 
-servoDemo.s: servoDemo.cpp.s
+audioPlatformv2.s: audioPlatformv2.cpp.s
 
-.PHONY : servoDemo.s
+.PHONY : audioPlatformv2.s
 
 # target to generate assembly for a file
-servoDemo.cpp.s:
-	cd /home/pi/projects/audioTest/build && $(MAKE) -f src/CMakeFiles/servoDemo.dir/build.make src/CMakeFiles/servoDemo.dir/servoDemo.cpp.s
-.PHONY : servoDemo.cpp.s
+audioPlatformv2.cpp.s:
+	cd /home/pi/projects/audioTest/build && $(MAKE) -f src/CMakeFiles/audioPlatformv2.dir/build.make src/CMakeFiles/audioPlatformv2.dir/audioPlatformv2.cpp.s
+.PHONY : audioPlatformv2.cpp.s
 
 # Help Target
 help:
@@ -202,14 +160,10 @@ help:
 	@echo "... depend"
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
-	@echo "... servoDemo"
-	@echo "... audioPlatform"
-	@echo "... audioPlatform.o"
-	@echo "... audioPlatform.i"
-	@echo "... audioPlatform.s"
-	@echo "... servoDemo.o"
-	@echo "... servoDemo.i"
-	@echo "... servoDemo.s"
+	@echo "... audioPlatformv2"
+	@echo "... audioPlatformv2.o"
+	@echo "... audioPlatformv2.i"
+	@echo "... audioPlatformv2.s"
 .PHONY : help
 
 

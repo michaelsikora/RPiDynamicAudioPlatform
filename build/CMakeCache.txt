@@ -172,7 +172,13 @@ audioTest_BINARY_DIR:STATIC=/home/pi/projects/audioTest/build
 audioTest_SOURCE_DIR:STATIC=/home/pi/projects/audioTest
 
 //Path to a library.
+pthread_loc:FILEPATH=/usr/lib/arm-linux-gnueabihf/libpthread.so
+
+//Path to a library.
 rtaudio_loc:FILEPATH=/usr/lib/librtaudio.so
+
+//Path to a library.
+sndfile_loc:FILEPATH=/usr/lib/libsndfile.so
 
 //Path to a library.
 wiringPi_loc:FILEPATH=/usr/lib/libwiringPi.so

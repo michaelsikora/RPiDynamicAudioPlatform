@@ -111,30 +111,17 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named servoDemo
+# Target rules for targets named audioPlatformv2
 
 # Build rule for target.
-servoDemo: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 servoDemo
-.PHONY : servoDemo
+audioPlatformv2: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 audioPlatformv2
+.PHONY : audioPlatformv2
 
 # fast build rule for target.
-servoDemo/fast:
-	$(MAKE) -f src/CMakeFiles/servoDemo.dir/build.make src/CMakeFiles/servoDemo.dir/build
-.PHONY : servoDemo/fast
-
-#=============================================================================
-# Target rules for targets named audioPlatform
-
-# Build rule for target.
-audioPlatform: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 audioPlatform
-.PHONY : audioPlatform
-
-# fast build rule for target.
-audioPlatform/fast:
-	$(MAKE) -f src/CMakeFiles/audioPlatform.dir/build.make src/CMakeFiles/audioPlatform.dir/build
-.PHONY : audioPlatform/fast
+audioPlatformv2/fast:
+	$(MAKE) -f src/CMakeFiles/audioPlatformv2.dir/build.make src/CMakeFiles/audioPlatformv2.dir/build
+.PHONY : audioPlatformv2/fast
 
 # Help Target
 help:
@@ -144,8 +131,7 @@ help:
 	@echo "... depend"
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
-	@echo "... servoDemo"
-	@echo "... audioPlatform"
+	@echo "... audioPlatformv2"
 .PHONY : help
 
 

@@ -43,6 +43,5 @@ set(CMAKE_MAKEFILE_PRODUCTS
 
 # Dependency information for all targets:
 set(CMAKE_DEPEND_INFO_FILES
-  "src/CMakeFiles/servoDemo.dir/DependInfo.cmake"
-  "src/CMakeFiles/audioPlatform.dir/DependInfo.cmake"
+  "src/CMakeFiles/audioPlatformv2.dir/DependInfo.cmake"
   )

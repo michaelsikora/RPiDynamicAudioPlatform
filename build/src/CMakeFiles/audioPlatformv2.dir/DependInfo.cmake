@@ -4,7 +4,7 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/home/pi/projects/audioTest/src/servoDemo.cpp" "/home/pi/projects/audioTest/build/src/CMakeFiles/servoDemo.dir/servoDemo.cpp.o"
+  "/home/pi/projects/audioTest/src/audioPlatformv2.cpp" "/home/pi/projects/audioTest/build/src/CMakeFiles/audioPlatformv2.dir/audioPlatformv2.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 

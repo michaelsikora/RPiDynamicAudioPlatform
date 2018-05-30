@@ -1,0 +1,1 @@
+/usr/bin/c++      CMakeFiles/audioPlatformv2.dir/audioPlatformv2.cpp.o  -o ../../bin/audioPlatformv2 -rdynamic -lrtaudio -lrtaudio -lrtaudio -lwiringPi -lwiringPi -lwiringPiPca9685 -lpthread -lpthread -lpthread -lsndfile -lsndfile -lpthread -lpthread -lsndfile -lsndfile 
