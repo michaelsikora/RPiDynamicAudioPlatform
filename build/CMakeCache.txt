@@ -14,6 +14,12 @@
 # EXTERNAL cache entries
 ########################
 
+//Value Computed by CMake
+AudioPlatformv2_BINARY_DIR:STATIC=/home/pi/projects/audioTest/build/src
+
+//Value Computed by CMake
+AudioPlatformv2_SOURCE_DIR:STATIC=/home/pi/projects/audioTest/src
+
 //Path to a program.
 CMAKE_AR:FILEPATH=/usr/bin/ar
 
@@ -178,7 +184,7 @@ pthread_loc:FILEPATH=/usr/lib/arm-linux-gnueabihf/libpthread.so
 rtaudio_loc:FILEPATH=/usr/lib/librtaudio.so
 
 //Path to a library.
-sndfile_loc:FILEPATH=/usr/lib/libsndfile.so
+sndfile_loc:FILEPATH=/usr/lib/arm-linux-gnueabihf/libsndfile.so
 
 //Path to a library.
 wiringPi_loc:FILEPATH=/usr/lib/libwiringPi.so

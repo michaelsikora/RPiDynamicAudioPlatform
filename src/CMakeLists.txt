@@ -1,5 +1,11 @@
 cmake_minimum_required (VERSION 3.2)
 
+#project (AudioPlatformv2)
+
+#include (CTest)
+
+#enable_testing()
+
 set(HEADER_LOC ${PROJECT_SOURCE_DIR}/include/)
 include_directories(${HEADER_LOC})
 message("Header files are ${HEADER_LOC}")
@@ -14,6 +20,8 @@ add_executable(audioPlatformv2 audioPlatformv2.cpp audioPlatformv2.h)
 #~ add_executable(sine sine.cpp ${HEADER_LOC}/RtAudio.h)
 #~ add_executable(callbacktest callbacktest.cpp ${HEADER_LOC}/RtAudio.h)
 #~ add_executable(servoDemo servoDemo.cpp ${HEADER_LOC}/RtAudio.h)
+
+#add_test(example_test audioPlatformv2)
 
 #~ Find Libraries
 find_library(rtaudio_loc NAMES rtaudio)

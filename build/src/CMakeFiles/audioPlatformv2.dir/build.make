@@ -93,9 +93,9 @@ audioPlatformv2_EXTERNAL_OBJECTS =
 ../bin/audioPlatformv2: /usr/lib/librtaudio.so
 ../bin/audioPlatformv2: /usr/lib/libwiringPi.so
 ../bin/audioPlatformv2: /usr/lib/arm-linux-gnueabihf/libpthread.so
-../bin/audioPlatformv2: /usr/lib/libsndfile.so
+../bin/audioPlatformv2: /usr/lib/arm-linux-gnueabihf/libsndfile.so
 ../bin/audioPlatformv2: /usr/lib/arm-linux-gnueabihf/libpthread.so
-../bin/audioPlatformv2: /usr/lib/libsndfile.so
+../bin/audioPlatformv2: /usr/lib/arm-linux-gnueabihf/libsndfile.so
 ../bin/audioPlatformv2: src/CMakeFiles/audioPlatformv2.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/pi/projects/audioTest/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX executable ../../bin/audioPlatformv2"
 	cd /home/pi/projects/audioTest/build/src && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/audioPlatformv2.dir/link.txt --verbose=$(VERBOSE)

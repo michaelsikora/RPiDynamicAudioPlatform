@@ -32,8 +32,8 @@ typedef float MY_TYPE;
 // Raw multichannel audio input data struct
 struct Data {
 	// BUFFER DATA
-	unsigned long bufferBytes;   // Number of Bytes in buffer
-	unsigned long bufferFrames;  // Number of Frames in buffer
+	unsigned int bufferBytes;   // Number of Bytes in buffer
+	unsigned int bufferFrames;  // Number of Frames in buffer
 	// INPUT DATA
 	MY_TYPE* 	  ibuffer;		 // input buffer
 	unsigned long itotalBytes;   // Total Bytes for recording
@@ -41,10 +41,10 @@ struct Data {
 	unsigned long iframeCounter; // current index of recording in frames
 	double		  itotalTime;
 	// OUTPUT DATA
-    float* 		  wavfile;		 // Wav File (interleaved)
+    float* 		  wavfile;	 // Wav File (interleaved)
 	unsigned long ototalBytes;   // Total Bytes in wavfile
-	unsigned long ototalFrames;  // Total frames in wavfile	
-    unsigned int  oframeCounter; // current index of wavfile in frames
+	unsigned long ototalFrames;   // Total frames in wavfile	
+    unsigned long  oframeCounter; // current index of wavfile in frames
 	double		  ototalTime;
 	// AUDIO SETTINGS
 	unsigned int  ichannels;  	 // number of channels to input
@@ -68,7 +68,7 @@ int input( void * /*outputBuffer*/, void *inputBuffer, unsigned int nBufferFrame
 int inout( void *outputBuffer, void *inputBuffer, unsigned int /*nBufferFrames*/,
            double /*streamTime*/, RtAudioStreamStatus status, void *userData );
   
-int outFromWav( void *outputBuffer, void *inputBuffer, unsigned int /*nBufferFrames*/,
+int outFromWav( void *outputBuffer, void* inputBuffer, unsigned int /*nBufferFrames*/,
            double /*streamTime*/, RtAudioStreamStatus status, void *userData );
 		   
 // Cleanup to be called when exiting		   
@@ -78,22 +78,28 @@ void leave( RtAudio &adc, Data &data );
 inline void WaitEnter() { std::cout << "Press Enter to continue..."; while (std::cin.get()!='\n'); }
 
 // Reads in a wav file and gets information from the file header
-static void read_wav_file ( const char* fname, void* userData ) { 
-	SndfileHandle file;
-	file = SndfileHandle(fname);
+static void read_wav_file ( const char* fname, Data* userData ) { 
+	//~ SndfileHandle file;
+	//~ file = SndfileHandle(fname);
 	
-	Data *localdata = (Data*) userData;
+	//~ Data *localdata = (Data*) userData;
 	
-	printf("Opened file '%s' \n", fname);
-	printf(" Sample rate : %d \n", file.samplerate());
-	printf(" Channels    : %d \n", file.channels());
-	printf(" Frames    : %d \n", (int)file.frames());
-	printf(" Format    : %d \n", file.format());
+	//~ printf("Opened file '%s' \n", fname);
+	//~ printf(" Sample rate : %d \n", file.samplerate());
+	//~ printf(" Channels    : %d \n", file.channels());
+	//~ printf(" Frames    : %d \n", (int)file.frames());
+	//~ printf(" Format    : %d \n", file.format());
+	//~ printf(" Writing %d Frames to wavfile \n", (*userData).ototalFrames);
 	
-	localdata->ochannels = file.channels();
-	// Assumes wav file is in proper format with settings pre-defined to match program
-	file.read(localdata->wavfile, localdata->ototalFrames);
-	puts("");
+	//~ userData->ochannels = file.channels();
+	//~ printf(" Point A ");
+	
+	//~ // Allocate the entire data buffer before starting stream.
+	//~ userData->wavfile = (float*) malloc( (*userData).ototalFrames );
+	//~ // Assumes wav file is in proper format with settings pre-defined to match program
+	//~ file.read(userData->wavfile , (*userData).ototalFrames);
+	//~ puts("");
+	//~ printf("File loaded\n");
 }
 
 // MAIN TASKS TO RUN
