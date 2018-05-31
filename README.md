@@ -70,3 +70,24 @@ Verification of dual Servo PWM over 3 meter snake cable
 <a href="https://www.youtube.com/watch?v=nqSF_LqeNWM
 " target="_blank"><img src="http://img.youtube.com/vi/nqSF_LqeNWM/0.jpg" 
 alt="IMAGE ALT TEXT HERE" width="240" height="180" border="10" /></a>
+
+# Version Control
+
+Development is now being done on several computers. The Commits are being made daily and
+when needing to switch between computers. Commit comments are in the following format:
+
+git commit -m "TIME LOCATION DATE"
+
+### TIME
+
+EOD - End of Day, MOD - Middle of Day, AH - After Hours, T - Testing
+
+### Location
+
+Desktop, Laptop, RPi
+
+### Date
+
+MM.DD
+ 
+ 
