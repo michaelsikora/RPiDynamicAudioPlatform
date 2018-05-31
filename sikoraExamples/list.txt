@@ -1,0 +1,14 @@
+
+Examples to demonstrate the c code used in this project
+
+1. Multithreading example
+
+2. Audio Input captured for a set amount of time and saved
+   to a .raw file (.wav without the header)
+   
+3. Audio Playback from a wav file
+
+4. Audio Input and output simulataneously for a set amount 
+   of time
+
+5. Servo calibration for the PCA9685

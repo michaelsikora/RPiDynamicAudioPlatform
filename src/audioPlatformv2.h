@@ -17,7 +17,6 @@
 #include <ctime> // For using time/Date in filenames
 #include <pthread.h> // POSIX multi-threading
 
-
 typedef float MY_TYPE;
 #define FORMAT RTAUDIO_FLOAT32
 
@@ -30,56 +29,60 @@ typedef float MY_TYPE;
 #define MAX_PWM 4096 // PWM driver resolution
 #define HERTZ 60 // 60 Hz is typically the fastest for micro-servos
 
-#define BUFFER_LEN 48000 // 3 seconds at 16kHz
-
 // Raw multichannel audio input data struct
 struct Data {
-	MY_TYPE* buffer;
-	//~ MY_TYPE* outBuffer;
-	unsigned long bufferBytes;
-	unsigned long totalFrames;
-	unsigned long frameCounter;
-	unsigned int channels;  // Number of Channels to record in
-    unsigned int	nFrame;	// Frame Number of Wave Table
-    float		*wavfile;	// Wav File (interleaved)
-    unsigned int	cur;	// current index of wavfile(in Frame) 
-};
-
-// Audio I/O settings for user interfacing
-struct ioSettings {
-	unsigned int channels;
-	unsigned int fs; 
-	unsigned int bufferFrames;
-	unsigned int device;
-	unsigned int offset;
-	double recordTime;
-	unsigned long totalBytes;
+	// BUFFER DATA
+	unsigned long bufferBytes;   // Number of Bytes in buffer
+	unsigned long bufferFrames;  // Number of Frames in buffer
+	// INPUT DATA
+	MY_TYPE* 	  ibuffer;		 // input buffer
+	unsigned long itotalBytes;   // Total Bytes for recording
+	unsigned long itotalFrames;  // Total frames for recording
+	unsigned long iframeCounter; // current index of recording in frames
+	double		  itotalTime;
+	// OUTPUT DATA
+    float* 		  wavfile;		 // Wav File (interleaved)
+	unsigned long ototalBytes;   // Total Bytes in wavfile
+	unsigned long ototalFrames;  // Total frames in wavfile	
+    unsigned int  oframeCounter; // current index of wavfile in frames
+	double		  ototalTime;
+	// AUDIO SETTINGS
+	unsigned int  ichannels;  	 // number of channels to input
+	unsigned int  ochannels;  	 // number of channels to output
+	unsigned int  fs; 			 // sampling frequency
+	unsigned int  device;		 // device id
+	unsigned int  offset;		 // channel offset
 };
 
 // Calculates the length of the pulse in samples from pulse width
-int calcTicks(float impulseMs, int hertz); 
+int calcTicks(float impulseMs, int hertz) {
+	float cycleMs = 1000.0f / hertz;
+	return (int)(MAX_PWM * impulseMs / cycleMs + 0.5f);
+}
 
 // MultiChannel Recording to a raw file for a set number of seconds
 // with interleaved buffers
 int input( void * /*outputBuffer*/, void *inputBuffer, unsigned int nBufferFrames,
-           double /*streamTime*/, RtAudioStreamStatus /*status*/, void *iData );
+           double /*streamTime*/, RtAudioStreamStatus /*status*/, void *userData );
 		   
 int inout( void *outputBuffer, void *inputBuffer, unsigned int /*nBufferFrames*/,
-           double /*streamTime*/, RtAudioStreamStatus status, void *iData );
-           
+           double /*streamTime*/, RtAudioStreamStatus status, void *userData );
+  
+int outFromWav( void *outputBuffer, void *inputBuffer, unsigned int /*nBufferFrames*/,
+           double /*streamTime*/, RtAudioStreamStatus status, void *userData );
+		   
 // Cleanup to be called when exiting		   
 void leave( RtAudio &adc, Data &data );
-
-// Resets the audio stream
-void resetStream( RtAudio &adc, Data &iData, RtAudio::StreamParameters &oParams,
-				  RtAudio::StreamParameters &iParams, ioSettings &rec );
-		   
+  
 // Function to pause program and wait for user input
 inline void WaitEnter() { std::cout << "Press Enter to continue..."; while (std::cin.get()!='\n'); }
 
-static void read_wav_file ( const char* fname, float* buffer ) { 
+// Reads in a wav file and gets information from the file header
+static void read_wav_file ( const char* fname, void* userData ) { 
 	SndfileHandle file;
 	file = SndfileHandle(fname);
+	
+	Data *localdata = (Data*) userData;
 	
 	printf("Opened file '%s' \n", fname);
 	printf(" Sample rate : %d \n", file.samplerate());
@@ -87,20 +90,18 @@ static void read_wav_file ( const char* fname, float* buffer ) {
 	printf(" Frames    : %d \n", (int)file.frames());
 	printf(" Format    : %d \n", file.format());
 	
-	int length = (int) file.frames();
-	if (length < file.samplerate()*10) {
-		file.read(buffer, BUFFER_LEN);
-		puts("");
-	} else {
-		printf("File is too large");
-	}
+	localdata->ochannels = file.channels();
+	// Assumes wav file is in proper format with settings pre-defined to match program
+	file.read(localdata->wavfile, localdata->ototalFrames);
+	puts("");
 }
 
 // MAIN TASKS TO RUN
 typedef void* (*func_ptr)(void*); // Callback array for tasks
 void* task_AUDIOINOUT(void* arg);
 void* task_AUDIOIN(void* arg);
-void* task_PANTILT(void* arg);
+void* task_AUDIOOUT(void* arg);
+void* task_PANTILTDEMO(void* arg);
 void* task_WAVREAD(void* arg);
 
 int main(int argc, char **argv);
