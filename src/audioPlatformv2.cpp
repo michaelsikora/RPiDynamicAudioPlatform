@@ -14,7 +14,6 @@
 
 pthread_mutex_t mutex1 = PTHREAD_MUTEX_INITIALIZER;
 int counter = 0; // iterator to test threads
-int pin; // selects which servo to send PWM to
 	
 // Servo pulse widths for major orientations. 
 // Program Calibrate was used to find these values
@@ -92,8 +91,8 @@ void resetStream(RtAudio &adc, Data &iData, RtAudio::StreamParameters &oParams,
 		} // close the audio stream
 		
 			try {
-				adc.openStream( &oParams, &iParams, FORMAT, rec.fs, &rec.bufferFrames, &inout, (void *)&iData.bufferBytes, &options );			
-				//~ adc.openStream( NULL, &iParams, FORMAT, rec.fs, &rec.bufferFrames, &input, (void *)&iData );
+				//~ adc.openStream( &oParams, &iParams, FORMAT, rec.fs, &rec.bufferFrames, &inout, (void *)&iData.bufferBytes, &options );			
+				adc.openStream( NULL, &iParams, FORMAT, rec.fs, &rec.bufferFrames, &input, (void *)&iData );
 			}
 			catch ( RtAudioError& e ) {
 				std::cout << '\n' << e.getMessage() << '\n' << std::endl;
@@ -111,7 +110,7 @@ void resetStream(RtAudio &adc, Data &iData, RtAudio::StreamParameters &oParams,
 		
 }
 
-void *task_AUDIO(void* arg) {
+void *task_AUDIOINOUT(void* arg) {
 	int threadNum = *((int*)arg);
 	printf("hello world from AUDIO thread %d\n", threadNum);
 	
@@ -120,13 +119,109 @@ void *task_AUDIO(void* arg) {
 	printf("Counter value %d\n", counter);
 	pthread_mutex_unlock( &mutex1 );
 	
-	ioSettings rec; // Three inputs and one output	
+	ioSettings rec; // audio settings
 	Data iData; // data struct for capturing audio
-	Data oData; // data struct for capturing audio
+	Data oData; // data struct for writing audio
 	rec.channels = 3; rec.fs = 16000; rec.bufferFrames = 512;
 	rec.device = 0; rec.offset = 0; rec.recordTime = 5.0;
-	FILE *fp;
-	std::vector <std::string> filenames;
+	FILE *fp; // File for output
+	std::vector <std::string> filenames; // Store filenames
+	int l = 0; // location index
+	int o = 0; // orientation index
+	int N_l = 1; // Number of locations
+	int N_o = 1; // Number of orientations
+	
+	/////////////// USE DATE IN FILENAME
+	time_t t = time(0);   // get time now
+    struct tm * now = localtime( & t );
+
+    char date [20]; // Character array to store current date
+    strftime (date,20,"%Y_%m_%d.",now); // Date format
+    std::string datePrefix = std::string(date); // get date prefix string
+    std::string dir = "../output/"; // output directory location
+    std::string fname; // string to store filename format
+    
+    // Preload Filenames
+    for(l = 0; l < N_l; ++l) {
+		for(o = 0; o < N_o; ++o) {
+			fname = "loc" + std::to_string(l) + "_o" + std::to_string(o) + ".raw"; // filename format
+			filenames.push_back(dir + datePrefix + fname);
+		}
+	}
+	
+	l = 0; o = 0; // reset l and o to 0 for future iteration
+	/////////////// 
+	
+	RtAudio adc;
+	if ( adc.getDeviceCount() < 1 ) {
+		std::cout << "\nNo audio devices found!\n";
+		exit( 1 );
+	}
+	
+	// Let RtAudio print messages to stderr.
+	adc.showWarnings( true );
+		
+	// Set our stream parameters for input and output.
+	RtAudio::StreamParameters iParams, oParams;
+	iParams.deviceId = rec.device;
+	iParams.nChannels = rec.channels;
+	iParams.firstChannel = rec.offset;
+	oParams.deviceId = rec.device;
+	oParams.nChannels = rec.channels;
+	oParams.firstChannel = rec.offset;
+	if ( rec.device == 0 ) {
+		iParams.deviceId = adc.getDefaultInputDevice();
+		oParams.deviceId = adc.getDefaultInputDevice();
+	}
+	////////////////
+	
+	// OUTLINE : Record Audio for set number of seconds
+	resetStream(adc,iData,oParams,iParams,rec); // ReSets the audio stream for recording
+
+  try {
+	printf("Starting Stream... \n");
+    adc.startStream();
+
+	//~ // Test RtAudio functionality for reporting latency.
+	std::cout << "\nStream latency = " << adc.getStreamLatency() << " frames" << std::endl;
+    std::cout << "\nRunning ... press <enter> to quit (buffer frames = " << rec.bufferFrames << ").\n";
+	WaitEnter();
+
+    // Stop the stream.
+    adc.stopStream();
+	leave(adc, iData);
+  }
+	catch ( RtAudioError& e ) {
+		std::cout << '\n' << e.getMessage() << '\n' << std::endl;
+		leave(adc, iData);
+		return NULL;
+	}
+
+	// Now write the entire data to the file.
+	fp = fopen( filenames[0].c_str(), "wb" );
+	fwrite( iData.buffer, sizeof( MY_TYPE ), iData.totalFrames * rec.channels, fp );
+	fclose( fp );
+	printf("Recording Complete\n");
+	
+	return NULL;
+}
+
+void *task_AUDIOIN(void* arg) {
+	int threadNum = *((int*)arg);
+	printf("hello world from AUDIO thread %d\n", threadNum);
+	
+	pthread_mutex_lock( &mutex1 );
+	counter += 10;
+	printf("Counter value %d\n", counter);
+	pthread_mutex_unlock( &mutex1 );
+	
+	ioSettings rec; // audio settings
+	Data iData; // data struct for capturing audio
+	Data oData; // data struct for writing audio
+	rec.channels = 3; rec.fs = 16000; rec.bufferFrames = 512;
+	rec.device = 0; rec.offset = 0; rec.recordTime = 5.0;
+	FILE *fp; // File for output
+	std::vector <std::string> filenames; // Store filenames
 	int l = 0; // location index
 	int o = 0; // orientation index
 	int N_l = 1; // Number of locations
@@ -162,26 +257,25 @@ void *task_AUDIO(void* arg) {
 	// Let RtAudio print messages to stderr.
 	adc.showWarnings( true );
 
-	//~ // Set our stream parameters for input only.
-	//~ RtAudio::StreamParameters iParams;
-	//~ if ( rec.device == 0 )
-		//~ iParams.deviceId = adc.getDefaultInputDevice();
-	//~ else
-	//~ iParams.deviceId = rec.device;
-	//~ iParams.nChannels = rec.channels;
-	//~ iParams.firstChannel = rec.offset;
-	//~ ////////////////
-	
-	
-	// Set our stream parameters for input and output.
-	RtAudio::StreamParameters iParams, oParams;
+	// Set our stream parameters for input only.
+	RtAudio::StreamParameters iParams;
 	iParams.deviceId = rec.device;
 	iParams.nChannels = rec.channels;
 	iParams.firstChannel = rec.offset;
-	oParams.deviceId = rec.device;
-	oParams.nChannels = rec.channels;
-	oParams.firstChannel = rec.offset;
+	if ( rec.device == 0 )
+		iParams.deviceId = adc.getDefaultInputDevice();
 	////////////////
+	
+	
+	//~ // Set our stream parameters for input and output.
+	//~ RtAudio::StreamParameters iParams, oParams;
+	//~ iParams.deviceId = rec.device;
+	//~ iParams.nChannels = rec.channels;
+	//~ iParams.firstChannel = rec.offset;
+	//~ oParams.deviceId = rec.device;
+	//~ oParams.nChannels = rec.channels;
+	//~ oParams.firstChannel = rec.offset;
+	//~ ////////////////
 	
 	// OUTLINE : Record Audio for set number of seconds
 	resetStream(adc,iData,oParams,iParams,rec); // ReSets the audio stream for recording
@@ -191,9 +285,17 @@ void *task_AUDIO(void* arg) {
     adc.startStream();
 
 	// Test RtAudio functionality for reporting latency.
-	std::cout << "\nStream latency = " << adc.getStreamLatency() << " frames" << std::endl;
-    std::cout << "\nRunning ... press <enter> to quit (buffer frames = " << rec.bufferFrames << ").\n";
-	WaitEnter();
+	//~ std::cout << "\nStream latency = " << adc.getStreamLatency() << " frames" << std::endl;
+    //~ std::cout << "\nRunning ... press <enter> to quit (buffer frames = " << rec.bufferFrames << ").\n";
+	//~ WaitEnter();
+
+
+	std::cout << "\nRecording for " << rec.recordTime << " seconds ..." << std::endl;
+	std::cout << "writing file" + filenames[0] + "(buffer frames = " << rec.bufferFrames << ")." << std::endl;
+	while ( adc.isStreamRunning() ) {
+		SLEEP( 100 ); // wake every 100 ms to check if we're done
+		std::cout << "\nStream latency = " << adc.getStreamLatency() << " frames" << std::endl;
+	}
 
     // Stop the stream.
     adc.stopStream();
@@ -204,12 +306,6 @@ void *task_AUDIO(void* arg) {
 		leave(adc, iData);
 		return NULL;
 	}
-
-	//~ std::cout << "\nRecording for " << rec.recordTime << " seconds ..." << std::endl;
-	//~ std::cout << "writing file" + filenames[0] + "(buffer frames = " << rec.bufferFrames << ")." << std::endl;
-	//~ while ( adc.isStreamRunning() ) {
-		//~ SLEEP( 100 ); // wake every 100 ms to check if we're done
-	//~ }
 
 	// Now write the entire data to the file.
 	fp = fopen( filenames[0].c_str(), "wb" );
@@ -225,7 +321,7 @@ void *task_WAVREAD(void* arg) {
 	printf("hello world from WAVREAD thread %d\n", threadNum);
 	
 	const char* fname = "../input/filteredWN.wav";
-	read_wav_file( fname );
+	read_wav_file( fname, iData.wavfile );
 	
 	return NULL;
 }
@@ -255,8 +351,9 @@ void *task_PANTILT(void* arg) {
 	
 ////
 	srand(time(0));
-	int N = 10;
-	int N_servo = 2;
+	int pin; // selects which servo to send PWM to
+	int N = 10; // Number of iterations for demo
+	int N_servo = 2; // Number of servos to run
 	float num[N_servo];
 	float upper[N_servo];
 	float lower[N_servo];
@@ -274,7 +371,7 @@ void *task_PANTILT(void* arg) {
 		for(int jj = 0; jj < N; ++jj) {
 			servoarray[ss][jj] = upper[ss]-servoinc[ss]*jj;
 		}
-}
+	}
 ////
 	
 // Random Orientations	
@@ -286,17 +383,17 @@ void *task_PANTILT(void* arg) {
 		}
 		printf("\n");
 		delay(500);    		 
-}
+	}
 	pca9685PWMReset(fd);
 	delay(2000);
 	
 // Iterative Orientations
-for(int jj = 0; jj < N; ++jj) { 
+	for(int jj = 0; jj < N; ++jj) { 
 	    for(int ss = 0; ss < N_servo; ++ss) {	
 			pwmWrite(PIN_BASE + ss, calcTicks(servoarray[ss][jj], HERTZ));			
 		}
 		delay(500);    		 
-}
+	}
 	pca9685PWMReset(fd);
 
 	return NULL;

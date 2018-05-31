@@ -1,6 +1,8 @@
+/*
+	Michael Sikora <m.sikora@uky.edu>
+	2018.05.31
 
-
-
+*/
 
 #include "pca9685.h" // PWM driver connected over I2C
 #include "RtAudio.h" // Audio I/O library from McGill University
@@ -37,7 +39,10 @@ struct Data {
 	unsigned long bufferBytes;
 	unsigned long totalFrames;
 	unsigned long frameCounter;
-	unsigned int channels;
+	unsigned int channels;  // Number of Channels to record in
+    unsigned int	nFrame;	// Frame Number of Wave Table
+    float		*wavfile;	// Wav File (interleaved)
+    unsigned int	cur;	// current index of wavfile(in Frame) 
 };
 
 // Audio I/O settings for user interfacing
@@ -83,7 +88,7 @@ static void read_wav_file ( const char* fname, float* buffer ) {
 	printf(" Format    : %d \n", file.format());
 	
 	int length = (int) file.frames();
-	if (BUFFER_LEN < file.samplerate()*10) {
+	if (length < file.samplerate()*10) {
 		file.read(buffer, BUFFER_LEN);
 		puts("");
 	} else {
@@ -93,7 +98,8 @@ static void read_wav_file ( const char* fname, float* buffer ) {
 
 // MAIN TASKS TO RUN
 typedef void* (*func_ptr)(void*); // Callback array for tasks
-void* task_AUDIO(void* arg);
+void* task_AUDIOINOUT(void* arg);
+void* task_AUDIOIN(void* arg);
 void* task_PANTILT(void* arg);
 void* task_WAVREAD(void* arg);
 
