@@ -48,7 +48,7 @@ int input( void * /*outputBuffer*/, void *inputBuffer, unsigned int nBufferFrame
 }
 
 /////////////////////////////////////////////////////////////////////////////////
-int inout( void *outputBuffer, void *inputBuffer, unsigned int /*nBufferFrames*/,
+int inoutdirect( void *outputBuffer, void *inputBuffer, unsigned int nBufferFrames,
            double /*streamTime*/, RtAudioStreamStatus status, void *userData ) {
 	
   Data* localData = (Data *) userData;
@@ -57,8 +57,39 @@ int inout( void *outputBuffer, void *inputBuffer, unsigned int /*nBufferFrames*/
   if ( status ) std::cout << "Stream over/underflow detected." << std::endl;
 
   // copy buffer from wavtable to output
-  unsigned int *bytes = (unsigned int *) localData->bufferBytes;
-  std::memcpy( outputBuffer, inputBuffer, *bytes );
+  // unsigned int *bytes = (unsigned int *) localData->bufferBytes;
+  std::memcpy( outputBuffer, inputBuffer, nBufferFrames );
+  return 0;
+}
+
+/////////////////////////////////////////////////////////////////////////////////
+int inout( void *outputBuffer, void *inputBuffer, unsigned int nBufferFrames,
+           double streamTime, RtAudioStreamStatus status, void *userData ) {
+	
+  Data* localData = (Data *) userData; // get user data
+  // float *obuf = (float*) outputBuffer; // get output buffer for iterating
+  // float *ibuf = (float*) inputBuffer; // get input buffer for iterating
+  unsigned int frames = nBufferFrames;
+  
+  // STATUS ERROR
+  if ( status ) std::cout << "Stream over/underflow detected." << std::endl;
+
+  // LAST BUFFER BEFORE OVERFLOW
+  if ( localData->oframeCounter + nBufferFrames > localData->ototalFrames) { // The next buffer will overflow
+    frames = localData->ototalFrames - localData->oframeCounter; // Get number of frames to avoid overflow
+    localData->bufferBytes = frames * localData->ochannels * sizeof( MY_TYPE ); // Set non-overflow buffer size
+  }
+  
+  std::cout << " streamTime: " << streamTime << std::endl;
+  
+  // copy buffer from wavtable to output and input to input buffer
+  unsigned long offset = localData->oframeCounter * localData->ochannels;
+  std::memcpy( outputBuffer, localData->wavfile+offset, localData->bufferBytes );
+  std::memcpy( localData->ibuffer+offset, inputBuffer, localData->bufferBytes );
+  localData->oframeCounter += frames;
+
+  // EXIT IF OVERFLOW
+  if ( localData->oframeCounter >= localData->ototalFrames ) return 2; // Overflow
   return 0;
 }
 
@@ -67,8 +98,6 @@ int outFromWav( void* outputBuffer, void* inputBuffer, unsigned int nBufferFrame
            double /*streamTime*/, RtAudioStreamStatus status, void *userData ) {
 			   
   Data* localData = (Data *) userData; // get user data
-  // float *obuf = (float*) outputBuffer; // get output buffer for iterating
-  // float *ibuf = (float*) inputBuffer; // get input buffer for iterating
   unsigned int frames = nBufferFrames;
   
   // STATUS ERROR

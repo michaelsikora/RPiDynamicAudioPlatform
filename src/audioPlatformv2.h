@@ -94,10 +94,13 @@ extern "C" {
 int input( void * /*outputBuffer*/, void *inputBuffer, unsigned int nBufferFrames,
            double /*streamTime*/, RtAudioStreamStatus /*status*/, void *userData );
 		   
-int inout( void *outputBuffer, void *inputBuffer, unsigned int /*nBufferFrames*/,
+int inoutdirect( void *outputBuffer, void *inputBuffer, unsigned int nBufferFrames,
            double /*streamTime*/, RtAudioStreamStatus status, void *userData );
-  
-int outFromWav( void *outputBuffer, void* inputBuffer, unsigned int /*nBufferFrames*/,
+
+int inout( void *outputBuffer, void *inputBuffer, unsigned int nBufferFrames,
+           double /*streamTime*/, RtAudioStreamStatus status, void *userData );
+   
+int outFromWav( void *outputBuffer, void* inputBuffer, unsigned int nBufferFrames,
            double /*streamTime*/, RtAudioStreamStatus status, void *userData );
 		   
 // Cleanup to be called when exiting		   
