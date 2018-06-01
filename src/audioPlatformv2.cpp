@@ -80,7 +80,7 @@ int inout( void *outputBuffer, void *inputBuffer, unsigned int nBufferFrames,
     localData->bufferBytes = frames * localData->ochannels * sizeof( MY_TYPE ); // Set non-overflow buffer size
   }
   
-  std::cout << " streamTime: " << streamTime << std::endl;
+  //~ std::cout << " streamTime: " << streamTime << std::endl;
   
   // copy buffer from wavtable to output and input to input buffer
   unsigned long offset = localData->oframeCounter * localData->ochannels;
@@ -206,15 +206,15 @@ void *task_AUDIOINOUT(void* arg) {
 	
 	////// Read in Wav
 	//~ const char* fname = "../input/filteredSine220.wav";
-	const char* fname = "../input/filteredWN.wav";
+	const char* filename = "../input/filteredWN.wav";
 	
 	userData.wavfile = 0;
 	//~ userData.wavfile = (MY_TYPE*) calloc( userData.ototalFrames, sizeof(MY_TYPE) );
 	
 	SndfileHandle file;
-	file = SndfileHandle(fname);
+	file = SndfileHandle(filename);
 
-	printf("Opened file '%s' \n", fname);
+	printf("Opened file '%s' \n", filename);
 	printf(" Sample rate : %d \n", file.samplerate());
 	printf(" Channels    : %d \n", file.channels());
 	printf(" Frames    : %d \n", (int)file.frames());
@@ -584,7 +584,7 @@ int main(int argc, char **argv)
 	int err;
 	int N_threads = 2;
 	pthread_t thread[N_threads];
-	func_ptr tasks[N_threads] = {task_PANTILTDEMO,task_AUDIOOUT}; // task_PANTILT
+	func_ptr tasks[N_threads] = {task_PANTILTDEMO,task_AUDIOINOUT}; // task_PANTILT
 	//~ func_ptr tasks[N_threads] = {task_AUDIOOUT}; // task_PANTILT
 
 	
