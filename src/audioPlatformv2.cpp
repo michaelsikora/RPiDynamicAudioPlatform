@@ -29,18 +29,20 @@ int input( void * /*outputBuffer*/, void *inputBuffer, unsigned int nBufferFrame
            double /*streamTime*/, RtAudioStreamStatus /*status*/, void *userData ) {
   
   Data* localData = (Data *) userData;
-
-  // Simply copy the data to our allocated buffer.
   unsigned int frames = nBufferFrames;
+
+  // LAST BUFFER BEFORE OVERFLOW  
   if ( (localData->iframeCounter + nBufferFrames) > localData->itotalFrames ) { // The next buffer will overflow
     frames = localData->itotalFrames - localData->iframeCounter; // Get number of frames to avoid overflow
     localData->bufferBytes = frames * localData->ichannels * sizeof( MY_TYPE ); // Set non-overflow buffer size
   }
-
+  
+  // copy buffer from wavtable to output
   unsigned long offset = localData->iframeCounter * localData->ichannels;
   std::memcpy( localData->ibuffer+offset, inputBuffer, localData->bufferBytes );
   localData->iframeCounter += frames;
 
+  // EXIT IF OVERFLOW
   if ( localData->iframeCounter >= localData->itotalFrames ) return 2;
   return 0;
 }
@@ -50,11 +52,11 @@ int inout( void *outputBuffer, void *inputBuffer, unsigned int /*nBufferFrames*/
            double /*streamTime*/, RtAudioStreamStatus status, void *userData ) {
 	
   Data* localData = (Data *) userData;
-	  
-  // Since the number of input and output channels is equal, we can do
-  // a simple buffer copy operation here.
+  
+  // STATUS ERROR
   if ( status ) std::cout << "Stream over/underflow detected." << std::endl;
 
+  // copy buffer from wavtable to output
   unsigned int *bytes = (unsigned int *) localData->bufferBytes;
   std::memcpy( outputBuffer, inputBuffer, *bytes );
   return 0;
@@ -63,16 +65,16 @@ int inout( void *outputBuffer, void *inputBuffer, unsigned int /*nBufferFrames*/
 /////////////////////////////////////////////////////////////////////////////////
 int outFromWav( void* outputBuffer, void* inputBuffer, unsigned int nBufferFrames,
            double /*streamTime*/, RtAudioStreamStatus status, void *userData ) {
-	
-  printf("running\n");
+			   
   Data* localData = (Data *) userData; // get user data
   // float *obuf = (float*) outputBuffer; // get output buffer for iterating
   // float *ibuf = (float*) inputBuffer; // get input buffer for iterating
   unsigned int frames = nBufferFrames;
   
-  printf("running\n");
+  // STATUS ERROR
   if ( status ) std::cout << "Stream over/underflow detected." << std::endl;
 
+  // LAST BUFFER BEFORE OVERFLOW
   if ( localData->oframeCounter + nBufferFrames > localData->ototalFrames) { // The next buffer will overflow
     frames = localData->ototalFrames - localData->oframeCounter; // Get number of frames to avoid overflow
     localData->bufferBytes = frames * localData->ochannels * sizeof( MY_TYPE ); // Set non-overflow buffer size
@@ -83,6 +85,7 @@ int outFromWav( void* outputBuffer, void* inputBuffer, unsigned int nBufferFrame
   std::memcpy( outputBuffer, localData->wavfile+offset, localData->bufferBytes );
   localData->oframeCounter += frames;
 
+  // EXIT IF OVERFLOW
   if ( localData->oframeCounter >= localData->ototalFrames ) return 2; // Overflow
   return 0;
 }
@@ -93,6 +96,8 @@ void leave(RtAudio &adac, Data &userData) {
 		if ( userData.ibuffer ) free( userData.ibuffer ); // free memory
 		if ( userData.wavfile ) free( userData.wavfile ); // free memory
 }
+
+
 
 /////////////////////////////////////////////////////////////////////////////////
 void *task_AUDIOINOUT(void* arg) {
@@ -186,7 +191,7 @@ void *task_AUDIOINOUT(void* arg) {
 		printf("Starting Stream... \n");
 		adc.startStream();
 
-		std::cout << "\nStream latency = " << adc.getStreamLatency() << " frames" << std::endl;
+		//~ std::cout << "\nStream latency = " << adc.getStreamLatency() << " frames" << std::endl;
 		std::cout << "\nRecording for " << userData.itotalTime << " seconds ..." << std::endl;
 		std::cout << "writing file" + filenames[0] + "(buffer frames = " << userData.bufferFrames << ")." << std::endl;
 		while ( adc.isStreamRunning() ) {
@@ -316,16 +321,15 @@ void *task_AUDIOIN(void* arg) {
 	while ( adc.isStreamRunning() ) {
 		SLEEP( 100 ); // wake every 100 ms to check if we're done
 	}
-		
-	printf("DONE");
-	// Stop the stream.
-	leave(adc, userData);
-
+	
 	// Now write the entire data to the file.
 	fp = fopen( filenames[0].c_str(), "wb" );
 	fwrite( userData.ibuffer, sizeof( MY_TYPE ), userData.itotalFrames * userData.ichannels, fp );
 	fclose( fp );
 	printf("Recording Complete\n");
+	
+	// Stop the stream.
+	leave(adc, userData);
 	return NULL;
 }
 
@@ -340,19 +344,23 @@ void *task_AUDIOOUT(void* arg) {
 	printf("Counter value %d\n", counter);
 	pthread_mutex_unlock( &mutex1 );
 	
-	////// Audio Settings	
+	////// Audio Settings
 	RtAudio dac;
 	Data userData; // data struct for sending data to audio callback
 	userData.fs = 16000; // Hertz
-	userData.bufferFrames = 512; // number of frames in buffer
+	userData.bufferFrames = 1024; // number of frames in buffer
 	userData.device = 0; 
 	userData.offset = 0; 
 	userData.ototalTime = 3.0;
 	userData.ototalFrames = (unsigned long) (userData.fs * userData.ototalTime);
 	
 	////// Read in Wav
-	const char* fname = "../input/filteredWN.wav";
 	//~ const char* fname = "../input/filteredSine220.wav";
+	const char* fname = "../input/filteredWN.wav";
+	
+	userData.wavfile = 0;
+	//~ userData.wavfile = (MY_TYPE*) calloc( userData.ototalFrames, sizeof(MY_TYPE) );
+	
 	SndfileHandle file;
 	file = SndfileHandle(fname);
 	
@@ -362,15 +370,12 @@ void *task_AUDIOOUT(void* arg) {
 	printf(" Frames    : %d \n", (int)file.frames());
 	printf(" Format    : %d \n", file.format());
 	printf(" Writing %d Frames to wavfile \n", userData.ototalFrames);
-	printf(" sizeof float: %d, and sizeof MY TYPE %d \n", sizeof(float), sizeof(MY_TYPE));
-	
 	userData.ochannels = file.channels();
-	userData.wavfile = 0;
+	
 	// Allocate the entire data buffer before starting stream.
-	userData.wavfile = (float*) calloc( userData.ototalFrames, sizeof(float) );
+	userData.wavfile = (float*) malloc( userData.ototalFrames * sizeof(float));
 	// Assumes wav file is in proper format with settings pre-defined to match program
 	file.read(userData.wavfile, userData.ototalFrames);
-	close(file);
 	printf("File loaded\n");
 	//////////////
 
@@ -380,9 +385,7 @@ void *task_AUDIOOUT(void* arg) {
 	}
 	
 	dac.showWarnings( true ); // Let RtAudio print messages to stderr.
-	
-	printf("Point A.. \n");
-	
+		
 	// Set our stream parameters for input only.
 	RtAudio::StreamParameters oParams, iParams;
 	oParams.deviceId = userData.device;
@@ -400,53 +403,36 @@ void *task_AUDIOOUT(void* arg) {
 	userData.bufferBytes = userData.bufferFrames * userData.ochannels * sizeof( MY_TYPE );
 	userData.ototalBytes = userData.ototalFrames * userData.ochannels * sizeof( MY_TYPE );
 		
-	//~ if(dac.isStreamOpen()) dac.closeStream(); // if an audio stream is already open close it
-		
-	printf("Point B.. \n");
+	if(dac.isStreamOpen()) dac.closeStream(); // if an audio stream is already open close it	
 	try {
 		dac.openStream( &oParams, &iParams, FORMAT, userData.fs, &userData.bufferFrames, &outFromWav, (void *)&userData );
 	} catch ( RtAudioError& e ) {
 		std::cout << '\n' << e.getMessage() << '\n' << std::endl;
-	printf("Point C.. \n");
 		leave(dac, userData);
 		return NULL;
 	}
-
+	
 	// RUN STREAM
 	try {
 		printf("Starting Stream... \n");
 		dac.startStream();
-
-		std::cout << "\nStream latency = " << dac.getStreamLatency() << " frames" << std::endl;
-		std::cout << "\nRecording for " << userData.ototalTime << " seconds ..." << std::endl;
-		while ( dac.isStreamRunning() ) {
-			SLEEP( 100 ); // wake every 100 ms to check if we're done
-		}
-		
-		// Stop the stream.
-		dac.closeStream();
-		leave(dac, userData);
 	} catch ( RtAudioError& e ) {
-		std::cout << '\n' << e.getMessage() << '\n' << std::endl;
+		std::cout << "\n !!! " << e.getMessage() << '\n' << std::endl;
 		leave(dac, userData);
 		return NULL;
 	}
 
-	printf("Recording Complete\n");
-	return NULL;
-}
+	std::cout << "\n Stream latency = " << dac.getStreamLatency() << " frames" << std::endl;
+	std::cout << " Running Playback for " << userData.ototalTime << " seconds ..." << std::endl;
+	while ( dac.isStreamRunning() ) {
+		SLEEP( 100 ); // wake every 100 ms to check if we're done
+		//~ std::cout << "..." << std::endl;
+	}
+		
+	// Stop the stream.
+	leave(dac, userData);
 
-/////////////////////////////////////////////////////////////////////////////////
-void *task_WAVREAD(void* arg) {
-	int threadNum = *((int*)arg);
-	printf("hello world from WAVREAD thread %d\n", threadNum);
-	
-	//~ Data* userData; // data struct for sending data to audio callback
-	//~ userData->ototalTime = 3.0;
-	
-	//~ const char* fname = "../input/filteredWN.wav";
-	//~ read_wav_file( fname, userData );
-	
+	printf("Playback Complete\n");
 	return NULL;
 }
 
@@ -485,11 +471,13 @@ void *task_PANTILTDEMO(void* arg) {
     float servoarray[N_servo][N];
     float servospan[N_servo];
     float servoinc[N_servo];
+    int ORIENTATION_DELAY = 400;
     
 	lower[0] = servo4[0];
     upper[0] = servo4[2];
 	lower[1] = servo5[0];
     upper[1] = servo5[1];
+    
     for(int ss = 0; ss < N_servo; ++ss) {
 		servospan[ss] = upper[ss]-lower[ss];
 		servoinc[ss] = servospan[ss]/(N-1);
@@ -503,29 +491,33 @@ void *task_PANTILTDEMO(void* arg) {
 	for(int jj = 0; jj < N; ++jj) { 
 		tic = current_timestamp();
 	    for(int ss = 0; ss < N_servo; ++ss) {	
-			num[ss] = ((float)rand()/(float)(RAND_MAX/1)*(upper[ss]-lower[ss]))+lower[ss];
-			printf(": %1.3f : ",num[ss]);
+			float normrand = (float)rand()/(float)(RAND_MAX/1);
+			num[ss] = (normrand*(upper[ss]-lower[ss]))+lower[ss];
+			printf(" : %1.4f : ",normrand);
 			pwmWrite(PIN_BASE + ss, calcTicks(num[ss], HERTZ)); 
 		}
-		toc = current_timestamp();
-		optime = (toc-tic)/1000000;
-		printf(" Delay: %lld ms \n", optime);
-		delay(500);    		 
+		delay(ORIENTATION_DELAY);
+		toc = current_timestamp(tic);
 	}
 	pca9685PWMReset(fd);
 	delay(2000);
 	
 // Iterative Orientations
 	for(int jj = 0; jj < N; ++jj) { 
+		tic = current_timestamp();
 	    for(int ss = 0; ss < N_servo; ++ss) {	
+			printf(" : %1.4f : ",(servoarray[ss][jj]-lower[ss])/(upper[ss]-lower[ss]));
 			pwmWrite(PIN_BASE + ss, calcTicks(servoarray[ss][jj], HERTZ));			
 		}
-		delay(500);    		 
+		delay(ORIENTATION_DELAY);   
+		toc = current_timestamp(tic); 		 
 	}
 	pca9685PWMReset(fd);
 
 	return NULL;
 }
+
+
 
 //////////////////////////////////////////////////
 int main(int argc, char **argv)
@@ -534,7 +526,9 @@ int main(int argc, char **argv)
 	int err;
 	int N_threads = 2;
 	pthread_t thread[N_threads];
-	func_ptr tasks[N_threads] = {task_PANTILTDEMO,task_AUDIOIN}; // task_PANTILT
+	func_ptr tasks[N_threads] = {task_PANTILTDEMO,task_AUDIOOUT}; // task_PANTILT
+	//~ func_ptr tasks[N_threads] = {task_AUDIOOUT}; // task_PANTILT
+
 	
 	// OUTLINE : Wait for input to start
 	printf("This program will demonstrate the simultaneously use of the PWM driver and the RtAudio library\n");

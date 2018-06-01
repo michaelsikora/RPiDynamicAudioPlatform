@@ -36,13 +36,11 @@ struct Data {
 	unsigned int bufferBytes;   // Number of Bytes in buffer
 	unsigned int bufferFrames;  // Number of Frames in buffer
 	// INPUT DATA
-	MY_TYPE* 	  ibuffer;		 // input buffer
 	unsigned long itotalBytes;   // Total Bytes for recording
 	unsigned long itotalFrames;  // Total frames for recording
 	unsigned long iframeCounter; // current index of recording in frames
 	double		  itotalTime;
 	// OUTPUT DATA
-    MY_TYPE* 		  wavfile;	 // Wav File (interleaved)
 	unsigned long ototalBytes;   // Total Bytes in wavfile
 	unsigned long ototalFrames;   // Total frames in wavfile	
     unsigned long  oframeCounter; // current index of wavfile in frames
@@ -53,19 +51,32 @@ struct Data {
 	unsigned int  fs; 			 // sampling frequency
 	unsigned int  device;		 // device id
 	unsigned int  offset;		 // channel offset
+	// BUFFERS
+	MY_TYPE* 	  ibuffer;		 // input buffer
+    MY_TYPE* 	  wavfile;	 // Wav File (interleaved)
 };
 
 // Timestamp variables
-uint64_t optime;
-uint64_t tic;
-uint64_t toc;
+struct timespec tic; 
+struct timespec toc;
+long optime_sec;
+long optime_nsec;
 
 // Current Timestamp
-uint64_t current_timestamp() {
+struct timespec current_timestamp() {
     struct timespec te; 
     clock_gettime(CLOCK_REALTIME, &te);
-    printf("nanoseconds: %lld\n", te.tv_nsec/1000000);
-    return te.tv_nsec;
+    return te;
+}
+
+struct timespec current_timestamp(struct timespec tic) {
+    struct timespec toc; 
+    clock_gettime(CLOCK_REALTIME, &toc);
+	optime_sec = toc.tv_sec - tic.tv_sec;
+	optime_nsec = toc.tv_nsec - tic.tv_nsec;
+	long optime = optime_sec*1000000 + optime_nsec/1000;
+	printf("        Delay: 0.%.4d s \n", optime);
+	return toc;
 }
 
 // Calculates the length of the pulse in samples from pulse width
@@ -73,6 +84,10 @@ int calcTicks(float impulseMs, int hertz) {
 	float cycleMs = 1000.0f / hertz;
 	return (int)(MAX_PWM * impulseMs / cycleMs + 0.5f);
 }
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 // MultiChannel Recording to a raw file for a set number of seconds
 // with interleaved buffers
@@ -88,33 +103,12 @@ int outFromWav( void *outputBuffer, void* inputBuffer, unsigned int /*nBufferFra
 // Cleanup to be called when exiting		   
 void leave( RtAudio &adc, Data &data );
   
+#ifdef __cplusplus
+}
+#endif
+
 // Function to pause program and wait for user input
 inline void WaitEnter() { std::cout << "Press Enter to continue..."; while (std::cin.get()!='\n'); }
-
-// Reads in a wav file and gets information from the file header
-static void read_wav_file ( const char* fname, Data* userData ) { 
-	//~ SndfileHandle file;
-	//~ file = SndfileHandle(fname);
-	
-	//~ Data *localdata = (Data*) userData;
-	
-	//~ printf("Opened file '%s' \n", fname);
-	//~ printf(" Sample rate : %d \n", file.samplerate());
-	//~ printf(" Channels    : %d \n", file.channels());
-	//~ printf(" Frames    : %d \n", (int)file.frames());
-	//~ printf(" Format    : %d \n", file.format());
-	//~ printf(" Writing %d Frames to wavfile \n", (*userData).ototalFrames);
-	
-	//~ userData->ochannels = file.channels();
-	//~ printf(" Point A ");
-	
-	//~ // Allocate the entire data buffer before starting stream.
-	//~ userData->wavfile = (float*) malloc( (*userData).ototalFrames );
-	//~ // Assumes wav file is in proper format with settings pre-defined to match program
-	//~ file.read(userData->wavfile , (*userData).ototalFrames);
-	//~ puts("");
-	//~ printf("File loaded\n");
-}
 
 // MAIN TASKS TO RUN
 typedef void* (*func_ptr)(void*); // Callback array for tasks
