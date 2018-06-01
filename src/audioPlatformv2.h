@@ -98,7 +98,7 @@ int inoutdirect( void *outputBuffer, void *inputBuffer, unsigned int nBufferFram
            double /*streamTime*/, RtAudioStreamStatus status, void *userData );
 
 int inout( void *outputBuffer, void *inputBuffer, unsigned int nBufferFrames,
-           double /*streamTime*/, RtAudioStreamStatus status, void *userData );
+           double streamTime, RtAudioStreamStatus status, void *userData );
    
 int outFromWav( void *outputBuffer, void* inputBuffer, unsigned int nBufferFrames,
            double /*streamTime*/, RtAudioStreamStatus status, void *userData );
