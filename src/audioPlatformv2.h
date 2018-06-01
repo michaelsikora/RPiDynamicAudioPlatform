@@ -14,6 +14,7 @@
 #include <stdio.h>
 #include <iostream>
 #include <vector>
+#include <sys/time.h> // For UNIX Timestamps
 #include <ctime> // For using time/Date in filenames
 #include <pthread.h> // POSIX multi-threading
 
@@ -41,7 +42,7 @@ struct Data {
 	unsigned long iframeCounter; // current index of recording in frames
 	double		  itotalTime;
 	// OUTPUT DATA
-    float* 		  wavfile;	 // Wav File (interleaved)
+    MY_TYPE* 		  wavfile;	 // Wav File (interleaved)
 	unsigned long ototalBytes;   // Total Bytes in wavfile
 	unsigned long ototalFrames;   // Total frames in wavfile	
     unsigned long  oframeCounter; // current index of wavfile in frames
@@ -53,6 +54,19 @@ struct Data {
 	unsigned int  device;		 // device id
 	unsigned int  offset;		 // channel offset
 };
+
+// Timestamp variables
+uint64_t optime;
+uint64_t tic;
+uint64_t toc;
+
+// Current Timestamp
+uint64_t current_timestamp() {
+    struct timespec te; 
+    clock_gettime(CLOCK_REALTIME, &te);
+    printf("nanoseconds: %lld\n", te.tv_nsec/1000000);
+    return te.tv_nsec;
+}
 
 // Calculates the length of the pulse in samples from pulse width
 int calcTicks(float impulseMs, int hertz) {

@@ -501,12 +501,15 @@ void *task_PANTILTDEMO(void* arg) {
 	
 // Random Orientations	
 	for(int jj = 0; jj < N; ++jj) { 
+		tic = current_timestamp();
 	    for(int ss = 0; ss < N_servo; ++ss) {	
 			num[ss] = ((float)rand()/(float)(RAND_MAX/1)*(upper[ss]-lower[ss]))+lower[ss];
 			printf(": %1.3f : ",num[ss]);
 			pwmWrite(PIN_BASE + ss, calcTicks(num[ss], HERTZ)); 
 		}
-		printf("\n");
+		toc = current_timestamp();
+		optime = (toc-tic)/1000000;
+		printf(" Delay: %lld ms \n", optime);
 		delay(500);    		 
 	}
 	pca9685PWMReset(fd);
