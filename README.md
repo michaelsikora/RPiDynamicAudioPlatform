@@ -90,4 +90,15 @@ Desktop, Laptop, RPi
 
 MM.DD
  
+ # Error
+Error periodically occurs where the callback will throw an error and fail.
+The Error message has been found in the source code at:
+https://github.com/thestk/rtaudio/blob/master/RtAudio.cpp#L7915
+
+Message thrown is:
+RtApiAlsa::callbackEvent: audio read error, Input/output error.
+
+Error can be recreated by running program with AUDIOINOUT task once. Then,
+running the program a second time. The error regularly occurs on the second
+run. Running the program again sometimes gives no error.
  
