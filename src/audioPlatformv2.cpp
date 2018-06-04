@@ -121,9 +121,15 @@ int outFromWav( void* outputBuffer, void* inputBuffer, unsigned int nBufferFrame
 
 /////////////////////////////////////////////////////////////////////////////////
 void leave(RtAudio &adac, Data &userData) {
-		if ( adac.isStreamOpen() ) adac.closeStream(); // close the audio stream
-		if ( userData.ibuffer ) free( userData.ibuffer ); // free memory
-		if ( userData.wavfile ) free( userData.wavfile ); // free memory
+		if ( adac.isStreamOpen() ) {
+			 adac.closeStream(); 
+			 printf("Stream Closed\n"); } // close the audio stream
+		if ( userData.ibuffer ) {
+			 free( userData.ibuffer );
+			 printf("Input Buffer Freed\n"); } // free memory
+		if ( userData.wavfile ) { 
+			free( userData.wavfile );
+			printf("Output Buffer Freed\n"); } // free memory
 }
 
 
@@ -223,7 +229,7 @@ void *task_AUDIOINOUT(void* arg) {
 	userData.ochannels = file.channels();
 	
 	// Allocate the entire data buffer before starting stream.
-	userData.wavfile = (float*) malloc( userData.ototalFrames * sizeof(float));
+	userData.wavfile = (MY_TYPE*) malloc( userData.ototalFrames * userData.ochannels * sizeof(MY_TYPE));
 	// Assumes wav file is in proper format with settings pre-defined to match program
 	file.read(userData.wavfile, userData.ototalFrames);
 	printf("File loaded\n");
@@ -546,19 +552,19 @@ void *task_PANTILTDEMO(void* arg) {
 ////
 	
 // Random Orientations	
-	for(int jj = 0; jj < N; ++jj) { 
-		tic = current_timestamp();
-	    for(int ss = 0; ss < N_servo; ++ss) {	
-			float normrand = (float)rand()/(float)(RAND_MAX/1);
-			num[ss] = (normrand*(upper[ss]-lower[ss]))+lower[ss];
-			printf(" : %1.4f : ",normrand);
-			pwmWrite(PIN_BASE + ss, calcTicks(num[ss], HERTZ)); 
-		}
-		delay(ORIENTATION_DELAY);
-		toc = current_timestamp(tic);
-	}
-	pca9685PWMReset(fd);
-	delay(2000);
+	//~ for(int jj = 0; jj < N; ++jj) { 
+		//~ tic = current_timestamp();
+	    //~ for(int ss = 0; ss < N_servo; ++ss) {	
+			//~ float normrand = (float)rand()/(float)(RAND_MAX/1);
+			//~ num[ss] = (normrand*(upper[ss]-lower[ss]))+lower[ss];
+			//~ printf(" : %1.4f : ",normrand);
+			//~ pwmWrite(PIN_BASE + ss, calcTicks(num[ss], HERTZ)); 
+		//~ }
+		//~ delay(ORIENTATION_DELAY);
+		//~ toc = current_timestamp(tic);
+	//~ }
+	//~ pca9685PWMReset(fd);
+	//~ delay(2000);
 	
 // Iterative Orientations
 	for(int jj = 0; jj < N; ++jj) { 
@@ -584,7 +590,7 @@ int main(int argc, char **argv)
 	int err;
 	int N_threads = 2;
 	pthread_t thread[N_threads];
-	func_ptr tasks[N_threads] = {task_PANTILTDEMO,task_AUDIOINOUT}; // task_PANTILT
+	func_ptr tasks[N_threads] = {task_PANTILTDEMO,task_AUDIOIN}; // task_PANTILT
 	//~ func_ptr tasks[N_threads] = {task_AUDIOOUT}; // task_PANTILT
 
 	
