@@ -153,8 +153,8 @@ void *task_AUDIOINOUT(void* arg) {
 	userData.bufferFrames = 1024; // number of frames in buffer
 	userData.device = 0; 
 	userData.offset = 0; 
-	userData.itotalTime = 3.0;
-	userData.ototalTime = 3.0;
+	userData.itotalTime = 10.0;
+	userData.ototalTime = 10.0;
 	FILE *fp; // File for output
 	std::vector <std::string> filenames; // Store filenames
 	int l = 0; // location index
@@ -552,31 +552,31 @@ void *task_PANTILTDEMO(void* arg) {
 ////
 	
 // Random Orientations	
-	//~ for(int jj = 0; jj < N; ++jj) { 
-		//~ tic = current_timestamp();
-	    //~ for(int ss = 0; ss < N_servo; ++ss) {	
-			//~ float normrand = (float)rand()/(float)(RAND_MAX/1);
-			//~ num[ss] = (normrand*(upper[ss]-lower[ss]))+lower[ss];
-			//~ printf(" : %1.4f : ",normrand);
-			//~ pwmWrite(PIN_BASE + ss, calcTicks(num[ss], HERTZ)); 
-		//~ }
-		//~ delay(ORIENTATION_DELAY);
-		//~ toc = current_timestamp(tic);
-	//~ }
-	//~ pca9685PWMReset(fd);
-	//~ delay(2000);
-	
-// Iterative Orientations
 	for(int jj = 0; jj < N; ++jj) { 
 		tic = current_timestamp();
 	    for(int ss = 0; ss < N_servo; ++ss) {	
-			printf(" : %1.4f : ",(servoarray[ss][jj]-lower[ss])/(upper[ss]-lower[ss]));
-			pwmWrite(PIN_BASE + ss, calcTicks(servoarray[ss][jj], HERTZ));			
+			float normrand = (float)rand()/(float)(RAND_MAX/1);
+			num[ss] = (normrand*(upper[ss]-lower[ss]))+lower[ss];
+			printf(" : %1.4f : ",normrand);
+			pwmWrite(PIN_BASE + ss, calcTicks(num[ss], HERTZ)); 
 		}
-		delay(ORIENTATION_DELAY);   
-		toc = current_timestamp(tic); 		 
+		delay(ORIENTATION_DELAY);
+		toc = current_timestamp(tic);
 	}
 	pca9685PWMReset(fd);
+	delay(2000);
+	
+// Iterative Orientations
+	//~ for(int jj = 0; jj < N; ++jj) { 
+		//~ tic = current_timestamp();
+	    //~ for(int ss = 0; ss < N_servo; ++ss) {	
+			//~ printf(" : %1.4f : ",(servoarray[ss][jj]-lower[ss])/(upper[ss]-lower[ss]));
+			//~ pwmWrite(PIN_BASE + ss, calcTicks(servoarray[ss][jj], HERTZ));			
+		//~ }
+		//~ delay(ORIENTATION_DELAY);   
+		//~ toc = current_timestamp(tic); 		 
+	//~ }
+	//~ pca9685PWMReset(fd);
 
 	return NULL;
 }
@@ -590,7 +590,7 @@ int main(int argc, char **argv)
 	int err;
 	int N_threads = 2;
 	pthread_t thread[N_threads];
-	func_ptr tasks[N_threads] = {task_PANTILTDEMO,task_AUDIOIN}; // task_PANTILT
+	func_ptr tasks[N_threads] = {task_PANTILTDEMO,task_AUDIOINOUT}; // task_PANTILT
 	//~ func_ptr tasks[N_threads] = {task_AUDIOOUT}; // task_PANTILT
 
 	
