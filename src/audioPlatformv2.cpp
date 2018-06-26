@@ -17,8 +17,8 @@ int counter = 0; // iterator to test threads
 	
 // Servo pulse widths for major orientations. 
 // Program Calibrate was used to find these values
-float servo0[3] = {0.65, 1.5, 2.5}; 
-float servo1[2] = {1.35, 2.35};
+float servo0[3] = {0.7, 1.65, 2.6}; 
+float servo1[2] = {1.35, 2.38};
 float servo2[3] = {0.55, 1.4, 2.4};
 float servo3[2] = {1.75, 2.9};
 float servo4[3] = {0.15, 1.55, 2.55}; 
@@ -535,12 +535,12 @@ void *task_PANTILTDEMO(void* arg) {
     float servoarray[N_servo][N];
     float servospan[N_servo];
     float servoinc[N_servo];
-    int ORIENTATION_DELAY = 400;
+    int ORIENTATION_DELAY = 1000;
     
-	lower[0] = servo4[0];
-    upper[0] = servo4[2];
-	lower[1] = servo5[0];
-    upper[1] = servo5[1];
+	lower[0] = servo0[0];
+    upper[0] = servo0[2];
+	lower[1] = servo1[0];
+    upper[1] = servo1[1];
     
     for(int ss = 0; ss < N_servo; ++ss) {
 		servospan[ss] = upper[ss]-lower[ss];
@@ -552,31 +552,34 @@ void *task_PANTILTDEMO(void* arg) {
 ////
 	
 // Random Orientations	
-	for(int jj = 0; jj < N; ++jj) { 
-		tic = current_timestamp();
-	    for(int ss = 0; ss < N_servo; ++ss) {	
-			float normrand = (float)rand()/(float)(RAND_MAX/1);
-			num[ss] = (normrand*(upper[ss]-lower[ss]))+lower[ss];
-			printf(" : %1.4f : ",normrand);
-			pwmWrite(PIN_BASE + ss, calcTicks(num[ss], HERTZ)); 
-		}
-		delay(ORIENTATION_DELAY);
-		toc = current_timestamp(tic);
-	}
-	pca9685PWMReset(fd);
-	delay(2000);
-	
-// Iterative Orientations
 	//~ for(int jj = 0; jj < N; ++jj) { 
 		//~ tic = current_timestamp();
 	    //~ for(int ss = 0; ss < N_servo; ++ss) {	
-			//~ printf(" : %1.4f : ",(servoarray[ss][jj]-lower[ss])/(upper[ss]-lower[ss]));
-			//~ pwmWrite(PIN_BASE + ss, calcTicks(servoarray[ss][jj], HERTZ));			
+			//~ float normrand = (float)rand()/(float)(RAND_MAX/1);
+			//~ num[ss] = (normrand*(upper[ss]-lower[ss]))+lower[ss];
+			//~ printf(" : %1.4f : ",normrand);
+			//~ pwmWrite(PIN_BASE + ss, calcTicks(num[ss], HERTZ)); 
 		//~ }
-		//~ delay(ORIENTATION_DELAY);   
-		//~ toc = current_timestamp(tic); 		 
+		//~ delay(ORIENTATION_DELAY);
+		//~ toc = current_timestamp(tic);
 	//~ }
 	//~ pca9685PWMReset(fd);
+	//~ delay(2000);
+	
+// Iterative Orientations
+	N_servo = 1;
+	pwmWrite(PIN_BASE + 0, calcTicks(servo0[1], HERTZ));
+	for(int jj = 0; jj < N; ++jj) { 
+		tic = current_timestamp();
+	    for(int ss = 0; ss < N_servo; ++ss) {
+			ss = 1;	
+			printf(" : %1.4f : ",(servoarray[ss][jj]-lower[ss])/(upper[ss]-lower[ss]));
+			pwmWrite(PIN_BASE + ss, calcTicks(servoarray[ss][jj], HERTZ));			
+		}
+		delay(ORIENTATION_DELAY);   
+		toc = current_timestamp(tic); 		 
+	}
+	pca9685PWMReset(fd);
 
 	return NULL;
 }
