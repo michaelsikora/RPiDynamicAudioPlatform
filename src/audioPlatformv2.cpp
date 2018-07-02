@@ -294,12 +294,12 @@ void *task_AUDIOIN(void* arg) {
 	
 	////// Audio Settings
 	Data userData; // data struct for sending data to audio callback
-	userData.ichannels = 3; // Integer
+	userData.ichannels = 6; // Integer
 	userData.fs = 16000; // Hertz
 	userData.bufferFrames = 1024; // number of frames in buffer
 	userData.device = 0; 
 	userData.offset = 0; 
-	userData.itotalTime = 10.0;
+	userData.itotalTime = 20.0;
 	FILE *fp; // File for output
 	std::vector <std::string> filenames; // Store filenames
 	int l = 0; // location index
@@ -505,6 +505,7 @@ void *task_PANTILTDEMO(void* arg) {
 	int threadNum = *((int*)arg);
 	printf("hello world from PANTILT thread %d\n", threadNum);
 
+	// Demonstration of mutex locking for shared data between threads
 	pthread_mutex_lock( &mutex1 );
 	counter++;
 	printf("Counter value %d\n", counter);
@@ -528,14 +529,14 @@ void *task_PANTILTDEMO(void* arg) {
 	srand(time(0));
 	int pin; // selects which servo to send PWM to
 	int N = 10; // Number of iterations for demo
-	int N_servo = 2; // Number of servos to run
+	int N_servo = 4; // Number of servos to run
 	float num[N_servo];
 	float upper[N_servo];
 	float lower[N_servo];
     float servoarray[N_servo][N];
     float servospan[N_servo];
     float servoinc[N_servo];
-    int ORIENTATION_DELAY = 1000;
+    int ORIENTATION_DELAY = 500;
     
 	lower[0] = servo0[0];
     upper[0] = servo0[2];
@@ -580,6 +581,8 @@ void *task_PANTILTDEMO(void* arg) {
 		toc = current_timestamp(tic); 		 
 	}
 	pca9685PWMReset(fd);
+	
+	delay(10000);
 
 	return NULL;
 }
@@ -591,13 +594,14 @@ int main(int argc, char **argv)
 {	
 	// MULTITHREADING
 	int err;
-	int N_threads = 2;
+	int N_threads = 1;
 	pthread_t thread[N_threads];
-	func_ptr tasks[N_threads] = {task_PANTILTDEMO,task_AUDIOIN}; // task_PANTILT
+	//~ func_ptr tasks[N_threads] = {task_PANTILTDEMO,task_AUDIOIN}; // task_PANTILT
+	func_ptr tasks[N_threads] = {task_AUDIOIN}; // task_PANTILT
 
 	
 	// OUTLINE : Wait for input to start
-	printf("This program will demonstrate the simultaneously use of the PWM driver and the RtAudio library\n");
+	printf("This program will demonstrate the simultaneous use of the PWM driver and the RtAudio library\n");
 	WaitEnter();
 	
 	// Create Threads
