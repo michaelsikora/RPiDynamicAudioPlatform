@@ -12,17 +12,16 @@
 
 #include "audioPlatformv2.h"
 
+// Multithread
 pthread_mutex_t mutex1 = PTHREAD_MUTEX_INITIALIZER;
 int counter = 0; // iterator to test threads
 	
 // Servo pulse widths for major orientations. 
-// Program Calibrate was used to find these values
-float servo0[3] = {0.7, 1.65, 2.6}; 
-float servo1[2] = {1.35, 2.38};
-float servo2[3] = {0.55, 1.4, 2.4};
-float servo3[2] = {1.75, 2.9};
-float servo4[3] = {0.15, 1.55, 2.55}; 
-float servo5[2] = {1.1, 2.0};
+// Program calibrate was used to find these values
+float servo0[2] = {1.08, 1.95}; // Purple Top 
+float servo1[3] = {0.7, 1.6, 2.5}; // Purple Bottom
+float servo8[3] = {1.35, 2.45}; // Red Top
+float servo9[2] = {0.7, 1.6, 2.6}; // Red Bottom
 
 /////////////////////////////////////////////////////////////////////////////////
 int input( void * /*outputBuffer*/, void *inputBuffer, unsigned int nBufferFrames,
@@ -140,6 +139,7 @@ void *task_AUDIOINOUT(void* arg) {
 	int threadNum = *((int*)arg);
 	printf("hello world from AUDIO thread %d\n", threadNum);
 	
+	// Demonstrate thread-safe Shared Variable assignment
 	pthread_mutex_lock( &mutex1 );
 	counter += 1;
 	printf("Counter value %d\n", counter);
@@ -147,8 +147,8 @@ void *task_AUDIOINOUT(void* arg) {
 	
 	////// Audio Settings
 	Data userData; // data struct for sending data to audio callback
-	userData.ichannels = 1; // Integer
-	userData.ochannels = 1; // Integer
+	userData.ichannels = 6; // Integer
+	userData.ochannels = 6; // Integer
 	userData.fs = 16000; // Hertz
 	userData.bufferFrames = 1024; // number of frames in buffer
 	userData.device = 0; 
@@ -157,9 +157,7 @@ void *task_AUDIOINOUT(void* arg) {
 	userData.ototalTime = 10.0;
 	FILE *fp; // File for output
 	std::vector <std::string> filenames; // Store filenames
-	int l = 0; // location index
 	int o = 0; // orientation index
-	int N_l = 1; // Number of locations
 	int N_o = 1; // Number of orientations
 	
 	/////////////// GENERATE FILENAMES WITH DATE
@@ -173,13 +171,11 @@ void *task_AUDIOINOUT(void* arg) {
     std::string fname; // string to store filename format
     
     // Preload Filenames
-    for(l = 0; l < N_l; ++l) {
-		for(o = 0; o < N_o; ++o) {
-			fname = "loc" + std::to_string(l) + "_o" + std::to_string(o) + ".raw"; // filename format
-			filenames.push_back(dir + datePrefix + fname);
-		}
+	for(o = 0; o < N_o; ++o) {
+		fname = "program" + std::to_string(o) + ".raw"; // filename format
+		filenames.push_back(dir + datePrefix + fname);
 	}
-	l = 0; o = 0; // reset l and o to 0 for future iteration
+	o = 0; // reset l and o to 0 for future iteration
 	/////////////// 
 	
 	RtAudio adc;
@@ -263,7 +259,7 @@ void *task_AUDIOINOUT(void* arg) {
 		return NULL;
 	}
 	
-	std::cout << "\nStream latency = " << adc.getStreamLatency() << " frames" << std::endl;
+	std::cout << "\nStream latency = " << adc.getStreamLatency() << " frames" << std::endl; // Test
 	std::cout << "\nRecording for " << userData.itotalTime << " seconds ..." << std::endl;
 	std::cout << "writing file" + filenames[0] + " \n(buffer frames = " << userData.bufferFrames << ")." << std::endl;
 	while ( adc.isStreamRunning() ) {
@@ -303,9 +299,7 @@ void *task_AUDIOIN(void* arg) {
 	FILE *fp; // File for output
 	std::vector <std::string> filenames; // Store filenames
 	int l = 0; // location index
-	int o = 0; // orientation index
 	int N_l = 1; // Number of locations
-	int N_o = 1; // Number of orientations
 	
 	/////////////// GENERATE FILENAMES WITH DATE
 	time_t t = time(0);   // get time now
@@ -314,17 +308,15 @@ void *task_AUDIOIN(void* arg) {
     char date [20]; // Character array to store current date
     strftime (date,20,"%Y_%m_%d.",now); // Date format
     std::string datePrefix = std::string(date); // get date prefix string
-    std::string dir = "../output/"; // output directory location
+    std::string dir = "../output/"; // output directory location from /bin
     std::string fname; // string to store filename format
     
     // Preload Filenames
     for(l = 0; l < N_l; ++l) {
-		for(o = 0; o < N_o; ++o) {
-			fname = "loc" + std::to_string(l) + "_o" + std::to_string(o) + ".raw"; // filename format
-			filenames.push_back(dir + datePrefix + fname);
-		}
+		fname = "program" + std::to_string(l) + ".raw"; // filename format
+		filenames.push_back(dir + datePrefix + fname);
 	}
-	l = 0; o = 0; // reset l and o to 0 for future iteration
+	l = 0; // reset l to 0 for future iteration
 	/////////////// 
 	
 	RtAudio adc;
@@ -399,7 +391,7 @@ void *task_AUDIOIN(void* arg) {
 
 /////////////////////////////////////////////////////////////////////////////////
 void *task_AUDIOOUT(void* arg) {
-	////// Testing Thread with counter mutex
+	////// OUTLINE : Testing Thread with counter mutex
 	int threadNum = *((int*)arg);
 	printf("hello world from AUDIO thread %d\n", threadNum);
 	
@@ -408,7 +400,7 @@ void *task_AUDIOOUT(void* arg) {
 	printf("Counter value %d\n", counter);
 	pthread_mutex_unlock( &mutex1 );
 	
-	////// Audio Settings
+	////// OUTLINE : Audio Settings
 	RtAudio dac;
 	Data userData; // data struct for sending data to audio callback
 	userData.fs = 16000; // Hertz
@@ -418,7 +410,7 @@ void *task_AUDIOOUT(void* arg) {
 	userData.ototalTime = 3.0;
 	userData.ototalFrames = (unsigned long) (userData.fs * userData.ototalTime);
 	
-	////// Read in Wav
+	////// OUTLINE : Read in Wav
 	//~ const char* fname = "../input/filteredSine220.wav";
 	const char* fname = "../input/filteredWN.wav";
 	
@@ -443,6 +435,7 @@ void *task_AUDIOOUT(void* arg) {
 	printf("File loaded\n");
 	//////////////
 
+	//  OUTLINE : Setup RTAudio
 	if ( dac.getDeviceCount() < 1 ) {
 		std::cout << "\nNo audio devices found!\n";
 		exit( 1 );
@@ -476,7 +469,7 @@ void *task_AUDIOOUT(void* arg) {
 		return NULL;
 	}
 	
-	// RUN STREAM
+	// OUTLINE : RUN STREAM
 	try {
 		printf("Starting Stream... \n");
 		dac.startStream();
@@ -493,7 +486,7 @@ void *task_AUDIOOUT(void* arg) {
 		//~ std::cout << "..." << std::endl;
 	}
 		
-	// Stop the stream.
+	// OUTLINE : Stop the stream.
 	leave(dac, userData);
 
 	printf("Playback Complete\n");
@@ -511,7 +504,7 @@ void *task_PANTILTDEMO(void* arg) {
 	printf("Counter value %d\n", counter);
 	pthread_mutex_unlock( &mutex1 );
 	
-	// OUTLINE : 2.Setup PCA9685
+	// OUTLINE : Setup PCA9685
 	int fd = pca9685Setup(PIN_BASE, 0x40, HERTZ);
 	if (fd < 0)
 	{
@@ -530,21 +523,26 @@ void *task_PANTILTDEMO(void* arg) {
 	int pin; // selects which servo to send PWM to
 	int N = 10; // Number of iterations for demo
 	int N_servo = 4; // Number of servos to run
+	int pins[4] = {0, 1, 8, 9};
 	float num[N_servo];
 	float upper[N_servo];
 	float lower[N_servo];
     float servoarray[N_servo][N];
     float servospan[N_servo];
     float servoinc[N_servo];
-    int ORIENTATION_DELAY = 500;
+    int ORIENTATION_DELAY = 500; // ms between orientations
     
 	lower[0] = servo0[0];
-    upper[0] = servo0[2];
+    upper[0] = servo0[1];
 	lower[1] = servo1[0];
-    upper[1] = servo1[1];
+    upper[1] = servo1[2];
+	lower[2] = servo8[0];
+    upper[2] = servo8[1];
+	lower[3] = servo9[0];
+    upper[3] = servo9[2];
     
     for(int ss = 0; ss < N_servo; ++ss) {
-		servospan[ss] = upper[ss]-lower[ss];
+		servospan[ss] = ( upper[ss]-lower[ss] ) * 0.70;
 		servoinc[ss] = servospan[ss]/(N-1);
 		for(int jj = 0; jj < N; ++jj) {
 			servoarray[ss][jj] = upper[ss]-servoinc[ss]*jj;
@@ -568,14 +566,11 @@ void *task_PANTILTDEMO(void* arg) {
 	//~ delay(2000);
 	
 // Iterative Orientations
-	N_servo = 1;
-	pwmWrite(PIN_BASE + 0, calcTicks(servo0[1], HERTZ));
 	for(int jj = 0; jj < N; ++jj) { 
 		tic = current_timestamp();
 	    for(int ss = 0; ss < N_servo; ++ss) {
-			ss = 1;	
 			printf(" : %1.4f : ",(servoarray[ss][jj]-lower[ss])/(upper[ss]-lower[ss]));
-			pwmWrite(PIN_BASE + ss, calcTicks(servoarray[ss][jj], HERTZ));			
+			pwmWrite(PIN_BASE + pins[ss], calcTicks(servoarray[ss][jj], HERTZ));			
 		}
 		delay(ORIENTATION_DELAY);   
 		toc = current_timestamp(tic); 		 
@@ -597,7 +592,7 @@ int main(int argc, char **argv)
 	int N_threads = 1;
 	pthread_t thread[N_threads];
 	//~ func_ptr tasks[N_threads] = {task_PANTILTDEMO,task_AUDIOIN}; // task_PANTILT
-	func_ptr tasks[N_threads] = {task_AUDIOIN}; // task_PANTILT
+	func_ptr tasks[N_threads] = {task_PANTILTDEMO};
 
 	
 	// OUTLINE : Wait for input to start

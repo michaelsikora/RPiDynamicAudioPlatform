@@ -18,8 +18,9 @@
 #include <ctime> // For using time/Date in filenames
 #include <pthread.h> // POSIX multi-threading
 
+// Audio data format
 typedef float MY_TYPE;
-#define FORMAT RTAUDIO_FLOAT32
+#define FORMAT RTAUDIO_SINT16
 
 // Sleep routines, used when recording audio
 #include <unistd.h>
@@ -63,13 +64,13 @@ long optime_sec;
 long optime_nsec;
 
 // Current Timestamp
-struct timespec current_timestamp() {
+struct timespec current_timestamp() { // TIC
     struct timespec te; 
     clock_gettime(CLOCK_REALTIME, &te);
     return te;
 }
 
-struct timespec current_timestamp(struct timespec tic) {
+struct timespec current_timestamp(struct timespec tic) { // TOC
     struct timespec toc; 
     clock_gettime(CLOCK_REALTIME, &toc);
 	optime_sec = toc.tv_sec - tic.tv_sec;
@@ -121,4 +122,5 @@ void* task_AUDIOOUT(void* arg);
 void* task_PANTILTDEMO(void* arg);
 void* task_WAVREAD(void* arg);
 
+// Main program, will run tasks in parallel
 int main(int argc, char **argv);
