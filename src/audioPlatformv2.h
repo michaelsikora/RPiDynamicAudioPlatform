@@ -20,7 +20,7 @@
 
 // Audio data format
 typedef float MY_TYPE;
-#define FORMAT RTAUDIO_SINT16
+#define FORMAT RTAUDIO_FLOAT32
 
 // Sleep routines, used when recording audio
 #include <unistd.h>

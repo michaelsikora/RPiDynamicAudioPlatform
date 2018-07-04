@@ -20,8 +20,8 @@ int counter = 0; // iterator to test threads
 // Program calibrate was used to find these values
 float servo0[2] = {1.08, 1.95}; // Purple Top 
 float servo1[3] = {0.7, 1.6, 2.5}; // Purple Bottom
-float servo8[3] = {1.35, 2.45}; // Red Top
-float servo9[2] = {0.7, 1.6, 2.6}; // Red Bottom
+float servo8[2] = {1.35, 2.45}; // Red Top
+float servo9[3] = {0.7, 1.6, 2.6}; // Red Bottom
 
 /////////////////////////////////////////////////////////////////////////////////
 int input( void * /*outputBuffer*/, void *inputBuffer, unsigned int nBufferFrames,
@@ -147,8 +147,8 @@ void *task_AUDIOINOUT(void* arg) {
 	
 	////// Audio Settings
 	Data userData; // data struct for sending data to audio callback
-	userData.ichannels = 6; // Integer
-	userData.ochannels = 6; // Integer
+	userData.ichannels = 3; // Integer
+	userData.ochannels = 3; // Integer
 	userData.fs = 16000; // Hertz
 	userData.bufferFrames = 1024; // number of frames in buffer
 	userData.device = 0; 
@@ -241,6 +241,8 @@ void *task_AUDIOINOUT(void* arg) {
 	
 	if(adc.isStreamOpen()) adc.closeStream(); // if an audio stream is already open close it
 		
+	delay(3000);
+		
 	try {
 		adc.openStream( &oParams, &iParams, FORMAT, userData.fs, &userData.bufferFrames, &inout, (void *)&userData );
 	} catch ( RtAudioError& e ) {
@@ -290,12 +292,12 @@ void *task_AUDIOIN(void* arg) {
 	
 	////// Audio Settings
 	Data userData; // data struct for sending data to audio callback
-	userData.ichannels = 6; // Integer
+	userData.ichannels = 3; // Integer
 	userData.fs = 16000; // Hertz
-	userData.bufferFrames = 1024; // number of frames in buffer
+	userData.bufferFrames = 3 * 1024; // number of frames in buffer
 	userData.device = 0; 
 	userData.offset = 0; 
-	userData.itotalTime = 20.0;
+	userData.itotalTime = 10.0;
 	FILE *fp; // File for output
 	std::vector <std::string> filenames; // Store filenames
 	int l = 0; // location index
@@ -522,7 +524,7 @@ void *task_PANTILTDEMO(void* arg) {
 	srand(time(0));
 	int pin; // selects which servo to send PWM to
 	int N = 10; // Number of iterations for demo
-	int N_servo = 4; // Number of servos to run
+	int N_servo = 2; // Number of servos to run
 	int pins[4] = {0, 1, 8, 9};
 	float num[N_servo];
 	float upper[N_servo];
@@ -542,43 +544,43 @@ void *task_PANTILTDEMO(void* arg) {
     upper[3] = servo9[2];
     
     for(int ss = 0; ss < N_servo; ++ss) {
-		servospan[ss] = ( upper[ss]-lower[ss] ) * 0.70;
+		servospan[ss] = ( upper[ss]-lower[ss] );
 		servoinc[ss] = servospan[ss]/(N-1);
 		for(int jj = 0; jj < N; ++jj) {
 			servoarray[ss][jj] = upper[ss]-servoinc[ss]*jj;
 		}
 	}
 ////
+
+delay(3000);
 	
 // Random Orientations	
-	//~ for(int jj = 0; jj < N; ++jj) { 
-		//~ tic = current_timestamp();
-	    //~ for(int ss = 0; ss < N_servo; ++ss) {	
-			//~ float normrand = (float)rand()/(float)(RAND_MAX/1);
-			//~ num[ss] = (normrand*(upper[ss]-lower[ss]))+lower[ss];
-			//~ printf(" : %1.4f : ",normrand);
-			//~ pwmWrite(PIN_BASE + ss, calcTicks(num[ss], HERTZ)); 
-		//~ }
-		//~ delay(ORIENTATION_DELAY);
-		//~ toc = current_timestamp(tic);
-	//~ }
-	//~ pca9685PWMReset(fd);
-	//~ delay(2000);
-	
-// Iterative Orientations
 	for(int jj = 0; jj < N; ++jj) { 
 		tic = current_timestamp();
-	    for(int ss = 0; ss < N_servo; ++ss) {
-			printf(" : %1.4f : ",(servoarray[ss][jj]-lower[ss])/(upper[ss]-lower[ss]));
-			pwmWrite(PIN_BASE + pins[ss], calcTicks(servoarray[ss][jj], HERTZ));			
+	    for(int ss = 0; ss < N_servo; ++ss) {	
+			float normrand = (float)rand()/(float)(RAND_MAX/1);
+			num[ss] = (normrand*(upper[ss]-lower[ss]))+lower[ss];
+			printf(" : %1.4f : ",normrand);
+			pwmWrite(PIN_BASE + ss, calcTicks(num[ss], HERTZ)); 
 		}
-		delay(ORIENTATION_DELAY);   
-		toc = current_timestamp(tic); 		 
+		delay(ORIENTATION_DELAY);
+		toc = current_timestamp(tic);
 	}
 	pca9685PWMReset(fd);
+	delay(2000);
 	
-	delay(10000);
-
+// Iterative Orientations
+	//~ for(int jj = 0; jj < N; ++jj) { 
+		//~ tic = current_timestamp();
+	    //~ for(int ss = 0; ss < N_servo; ++ss) {
+			//~ printf(" : %1.4f : ",(servoarray[ss][jj]-lower[ss])/(upper[ss]-lower[ss]));
+			//~ pwmWrite(PIN_BASE + pins[ss], calcTicks(servoarray[ss][jj], HERTZ));			
+		//~ }
+		//~ delay(ORIENTATION_DELAY);   
+		//~ toc = current_timestamp(tic); 		 
+	//~ }
+	//~ pca9685PWMReset(fd);
+	
 	return NULL;
 }
 
@@ -589,10 +591,10 @@ int main(int argc, char **argv)
 {	
 	// MULTITHREADING
 	int err;
-	int N_threads = 1;
+	int N_threads = 2;
 	pthread_t thread[N_threads];
-	//~ func_ptr tasks[N_threads] = {task_PANTILTDEMO,task_AUDIOIN}; // task_PANTILT
-	func_ptr tasks[N_threads] = {task_PANTILTDEMO};
+	func_ptr tasks[N_threads] = {task_PANTILTDEMO,task_AUDIOINOUT}; // task_PANTILT
+	//~ func_ptr tasks[N_threads] = {task_AUDIOIN};
 
 	
 	// OUTLINE : Wait for input to start
