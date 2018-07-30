@@ -8,6 +8,10 @@
  * 
  * This version was made to develop the simultaneous servo and audio threads
  * 
+ * BUG 2018.07.26
+ * The Audio Tasks that output are having regular bugs where they either 
+ * play part of the expected wav file, play an input channel, or fail 
+ * with a segmentation fault
  */
 
 #include "audioPlatformv2.h"
@@ -18,10 +22,10 @@ int counter = 0; // iterator to test threads
 	
 // Servo pulse widths for major orientations. 
 // Program calibrate was used to find these values
-float servo0[2] = {1.08, 1.95}; // Purple Top 
-float servo1[3] = {0.7, 1.6, 2.5}; // Purple Bottom
-float servo8[2] = {1.35, 2.45}; // Red Top
-float servo9[3] = {0.7, 1.6, 2.6}; // Red Bottom
+float servo0[3] = {0.7, 1.6, 2.5}; // Purple Bottom
+float servo1[2] = {1.08, 1.95}; // Purple Top 
+float servo8[3] = {0.7, 1.6, 2.6}; // Red Bottom
+float servo9[2] = {1.35, 2.4}; // Red Top
 
 /////////////////////////////////////////////////////////////////////////////////
 int input( void * /*outputBuffer*/, void *inputBuffer, unsigned int nBufferFrames,
@@ -33,7 +37,7 @@ int input( void * /*outputBuffer*/, void *inputBuffer, unsigned int nBufferFrame
   // LAST BUFFER BEFORE OVERFLOW  
   if ( (localData->iframeCounter + nBufferFrames) > localData->itotalFrames ) { // The next buffer will overflow
     frames = localData->itotalFrames - localData->iframeCounter; // Get number of frames to avoid overflow
-    localData->bufferBytes = frames * localData->ichannels * sizeof( MY_TYPE ); // Set non-overflow buffer size
+    localData->bufferBytes = frames * localData->ichannels * sizeof( float ); // Set non-overflow buffer size
   }
   
   // copy buffer from wavtable to output
@@ -76,7 +80,7 @@ int inout( void *outputBuffer, void *inputBuffer, unsigned int nBufferFrames,
   // LAST BUFFER BEFORE OVERFLOW
   if ( localData->oframeCounter + nBufferFrames > localData->ototalFrames) { // The next buffer will overflow
     frames = localData->ototalFrames - localData->oframeCounter; // Get number of frames to avoid overflow
-    localData->bufferBytes = frames * localData->ochannels * sizeof( MY_TYPE ); // Set non-overflow buffer size
+    localData->bufferBytes = frames * localData->ochannels * sizeof( float ); // Set non-overflow buffer size
   }
   
   //~ std::cout << " streamTime: " << streamTime << std::endl;
@@ -105,7 +109,7 @@ int outFromWav( void* outputBuffer, void* inputBuffer, unsigned int nBufferFrame
   // LAST BUFFER BEFORE OVERFLOW
   if ( localData->oframeCounter + nBufferFrames > localData->ototalFrames) { // The next buffer will overflow
     frames = localData->ototalFrames - localData->oframeCounter; // Get number of frames to avoid overflow
-    localData->bufferBytes = frames * localData->ochannels * sizeof( MY_TYPE ); // Set non-overflow buffer size
+    localData->bufferBytes = frames * localData->ochannels * sizeof( float ); // Set non-overflow buffer size
   }
   
   // copy buffer from wavtable to output
@@ -201,17 +205,18 @@ void *task_AUDIOINOUT(void* arg) {
 	
 	RtAudio::StreamOptions options; // For setting RtAudio built in stream options
 	userData.ibuffer = 0; userData.iframeCounter = 0;
-	userData.bufferBytes = userData.bufferFrames * userData.ichannels * sizeof( MY_TYPE );
+	userData.bufferBytes = userData.bufferFrames * userData.ichannels * sizeof( float );
 	userData.itotalFrames = (unsigned long) (userData.fs * userData.itotalTime);
-	userData.itotalBytes = userData.itotalFrames * userData.ichannels * sizeof( MY_TYPE );
+	userData.itotalBytes = userData.itotalFrames * userData.ichannels * sizeof( float );
 	userData.ototalFrames = (unsigned long) (userData.fs * userData.ototalTime);
 	
 	////// Read in Wav
 	//~ const char* fname = "../input/filteredSine220.wav";
-	const char* filename = "../input/filteredWN.wav";
+	//~ const char* filename = "../input/filteredWN.wav";
+	const char* filename = "../input/fswp300_12k_3ch.wav";
 	
 	userData.wavfile = 0;
-	//~ userData.wavfile = (MY_TYPE*) calloc( userData.ototalFrames, sizeof(MY_TYPE) );
+	//~ userData.wavfile = (float*) calloc( userData.ototalFrames, sizeof(float) );
 	
 	SndfileHandle file;
 	file = SndfileHandle(filename);
@@ -225,14 +230,14 @@ void *task_AUDIOINOUT(void* arg) {
 	userData.ochannels = file.channels();
 	
 	// Allocate the entire data buffer before starting stream.
-	userData.wavfile = (MY_TYPE*) malloc( userData.ototalFrames * userData.ochannels * sizeof(MY_TYPE));
+	userData.wavfile = (float*) malloc( userData.ototalFrames * userData.ochannels * sizeof(float));
 	// Assumes wav file is in proper format with settings pre-defined to match program
 	file.read(userData.wavfile, userData.ototalFrames);
 	printf("File loaded\n");
 	//////////////	
 	
 	// Allocate the entire data buffer before starting stream.
-	userData.ibuffer = (MY_TYPE*) malloc( userData.itotalBytes  );
+	userData.ibuffer = (float*) malloc( userData.itotalBytes  );
 	if ( userData.ibuffer == 0 ) {
 		std::cout << "Memory allocation error ... quitting!\n";
 		leave(adc, userData);
@@ -270,7 +275,7 @@ void *task_AUDIOINOUT(void* arg) {
 	
 	// Now write the entire data to the file.
 	fp = fopen( filenames[0].c_str(), "wb" );
-	fwrite( userData.ibuffer, sizeof( MY_TYPE ), userData.itotalFrames * userData.ichannels, fp );
+	fwrite( userData.ibuffer, sizeof( float ), userData.itotalFrames * userData.ichannels, fp );
 	fclose( fp );
 	printf("Recording Complete\n");
 	
@@ -292,12 +297,12 @@ void *task_AUDIOIN(void* arg) {
 	
 	////// Audio Settings
 	Data userData; // data struct for sending data to audio callback
-	userData.ichannels = 3; // Integer
+	userData.ichannels = 6; // Integer
 	userData.fs = 16000; // Hertz
-	userData.bufferFrames = 3 * 1024; // number of frames in buffer
+	userData.bufferFrames = 512; // number of frames in buffer
 	userData.device = 0; 
 	userData.offset = 0; 
-	userData.itotalTime = 10.0;
+	userData.itotalTime = 15.0;
 	FILE *fp; // File for output
 	std::vector <std::string> filenames; // Store filenames
 	int l = 0; // location index
@@ -341,9 +346,9 @@ void *task_AUDIOIN(void* arg) {
 	RtAudio::StreamOptions options; // For setting RtAudio built in stream options
 	userData.ibuffer = 0; 
 	userData.iframeCounter = 0;
-	userData.bufferBytes = userData.bufferFrames * userData.ichannels * sizeof( MY_TYPE );
+	userData.bufferBytes = userData.bufferFrames * userData.ichannels * sizeof( float );
 	userData.itotalFrames = (unsigned long) (userData.fs * userData.itotalTime);
-	userData.itotalBytes = userData.itotalFrames * userData.ichannels * sizeof( MY_TYPE );
+	userData.itotalBytes = userData.itotalFrames * userData.ichannels * sizeof( float );
   
 	if(adc.isStreamOpen()) adc.closeStream(); // if an audio stream is already open close it
 		
@@ -356,7 +361,7 @@ void *task_AUDIOIN(void* arg) {
 	}
 
 	// Allocate the entire data buffer before starting stream.
-	userData.ibuffer = (MY_TYPE*) malloc( userData.itotalBytes  );
+	userData.ibuffer = (float*) malloc( userData.itotalBytes  );
 	if ( userData.ibuffer == 0 ) {
 		std::cout << "Memory allocation error ... quitting!\n";
 		leave(adc, userData);
@@ -382,7 +387,7 @@ void *task_AUDIOIN(void* arg) {
 	
 	// Now write the entire data to the file.
 	fp = fopen( filenames[0].c_str(), "wb" );
-	fwrite( userData.ibuffer, sizeof( MY_TYPE ), userData.itotalFrames * userData.ichannels, fp );
+	fwrite( userData.ibuffer, sizeof( float ), userData.itotalFrames * userData.ichannels, fp );
 	fclose( fp );
 	printf("Recording Complete\n");
 	
@@ -409,15 +414,16 @@ void *task_AUDIOOUT(void* arg) {
 	userData.bufferFrames = 1024; // number of frames in buffer
 	userData.device = 0; 
 	userData.offset = 0; 
-	userData.ototalTime = 3.0;
+	userData.ototalTime = 10.0;
 	userData.ototalFrames = (unsigned long) (userData.fs * userData.ototalTime);
 	
 	////// OUTLINE : Read in Wav
 	//~ const char* fname = "../input/filteredSine220.wav";
 	const char* fname = "../input/filteredWN.wav";
+	//~ const char* fname = "../input/fswp300_12k_3ch.wav";
 	
 	userData.wavfile = 0;
-	//~ userData.wavfile = (MY_TYPE*) calloc( userData.ototalFrames, sizeof(MY_TYPE) );
+	//~ userData.wavfile = (float*) calloc( userData.ototalFrames, sizeof(float) );
 	
 	SndfileHandle file;
 	file = SndfileHandle(fname);
@@ -459,8 +465,8 @@ void *task_AUDIOOUT(void* arg) {
 	// OUTLINE : Record Audio for set number of seconds
 	RtAudio::StreamOptions options; // For setting RtAudio built in stream options
 	userData.oframeCounter = 0;
-	userData.bufferBytes = userData.bufferFrames * userData.ochannels * sizeof( MY_TYPE );
-	userData.ototalBytes = userData.ototalFrames * userData.ochannels * sizeof( MY_TYPE );
+	userData.bufferBytes = userData.bufferFrames * userData.ochannels * sizeof( float );
+	userData.ototalBytes = userData.ototalFrames * userData.ochannels * sizeof( float );
 		
 	if(dac.isStreamOpen()) dac.closeStream(); // if an audio stream is already open close it	
 	try {
@@ -524,30 +530,32 @@ void *task_PANTILTDEMO(void* arg) {
 	srand(time(0));
 	int pin; // selects which servo to send PWM to
 	int N = 10; // Number of iterations for demo
-	int N_servo = 2; // Number of servos to run
-	int pins[4] = {0, 1, 8, 9};
+	int N_servo = 4; // Number of servos to run
+	int pins[4] = {9, 8, 1, 0};
 	float num[N_servo];
-	float upper[N_servo];
-	float lower[N_servo];
+	float max[N_servo]; 
+	float min[N_servo];
     float servoarray[N_servo][N];
     float servospan[N_servo];
     float servoinc[N_servo];
-    int ORIENTATION_DELAY = 500; // ms between orientations
+    int ORIENTATION_DELAY = 1000; // ms between orientations
     
-	lower[0] = servo0[0];
-    upper[0] = servo0[1];
-	lower[1] = servo1[0];
-    upper[1] = servo1[2];
-	lower[2] = servo8[0];
-    upper[2] = servo8[1];
-	lower[3] = servo9[0];
-    upper[3] = servo9[2];
+    // Set min and max values for servos from pre-program calibration
+	min[0] = servo0[0];
+    max[0] = servo0[2];
+	min[1] = servo1[0];
+    max[1] = servo1[1];
+	min[2] = servo8[0];
+    max[2] = servo8[2];
+	min[3] = servo9[0];
+    max[3] = servo9[1];
     
+    // define servo increment values
     for(int ss = 0; ss < N_servo; ++ss) {
-		servospan[ss] = ( upper[ss]-lower[ss] );
+		servospan[ss] = ( max[ss]-min[ss] );
 		servoinc[ss] = servospan[ss]/(N-1);
 		for(int jj = 0; jj < N; ++jj) {
-			servoarray[ss][jj] = upper[ss]-servoinc[ss]*jj;
+			servoarray[ss][jj] = max[ss]-servoinc[ss]*jj;
 		}
 	}
 ////
@@ -555,31 +563,31 @@ void *task_PANTILTDEMO(void* arg) {
 delay(3000);
 	
 // Random Orientations	
-	for(int jj = 0; jj < N; ++jj) { 
-		tic = current_timestamp();
-	    for(int ss = 0; ss < N_servo; ++ss) {	
-			float normrand = (float)rand()/(float)(RAND_MAX/1);
-			num[ss] = (normrand*(upper[ss]-lower[ss]))+lower[ss];
-			printf(" : %1.4f : ",normrand);
-			pwmWrite(PIN_BASE + ss, calcTicks(num[ss], HERTZ)); 
-		}
-		delay(ORIENTATION_DELAY);
-		toc = current_timestamp(tic);
-	}
-	pca9685PWMReset(fd);
-	delay(2000);
-	
-// Iterative Orientations
 	//~ for(int jj = 0; jj < N; ++jj) { 
 		//~ tic = current_timestamp();
-	    //~ for(int ss = 0; ss < N_servo; ++ss) {
-			//~ printf(" : %1.4f : ",(servoarray[ss][jj]-lower[ss])/(upper[ss]-lower[ss]));
-			//~ pwmWrite(PIN_BASE + pins[ss], calcTicks(servoarray[ss][jj], HERTZ));			
+	    //~ for(int ss = 0; ss < N_servo; ++ss) {	
+			//~ float normrand = (float)rand()/(float)(RAND_MAX/1);
+			//~ num[ss] = (normrand*(max[ss]-min[ss]))+min[ss];
+			//~ printf(" : %1.4f : ",normrand);
+			//~ pwmWrite(PIN_BASE + pins[ss], calcTicks(num[ss], HERTZ)); 
 		//~ }
-		//~ delay(ORIENTATION_DELAY);   
-		//~ toc = current_timestamp(tic); 		 
+		//~ delay(ORIENTATION_DELAY);
+		//~ toc = current_timestamp(tic);
 	//~ }
 	//~ pca9685PWMReset(fd);
+	//~ delay(2000);
+	
+// Iterative Orientations
+	for(int jj = 0; jj < N; ++jj) { 
+		tic = current_timestamp();
+	    for(int ss = 0; ss < N_servo; ++ss) {
+			printf(" : %1.4f : ",(servoarray[ss][jj]-min[ss])/(max[ss]-min[ss]));
+			pwmWrite(PIN_BASE + pins[ss], calcTicks(servoarray[ss][jj], HERTZ));			
+		}
+		delay(ORIENTATION_DELAY);   
+		toc = current_timestamp(tic); 		 
+	}
+	pca9685PWMReset(fd);
 	
 	return NULL;
 }
@@ -591,10 +599,10 @@ int main(int argc, char **argv)
 {	
 	// MULTITHREADING
 	int err;
-	int N_threads = 2;
+	int N_threads = 1;
 	pthread_t thread[N_threads];
-	func_ptr tasks[N_threads] = {task_PANTILTDEMO,task_AUDIOINOUT}; // task_PANTILT
-	//~ func_ptr tasks[N_threads] = {task_AUDIOIN};
+	//~ func_ptr tasks[N_threads] = {task_PANTILTDEMO,task_AUDIOIN}; // task_PANTILT
+	func_ptr tasks[N_threads] = {task_AUDIOIN};
 
 	
 	// OUTLINE : Wait for input to start

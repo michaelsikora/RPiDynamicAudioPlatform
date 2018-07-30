@@ -53,8 +53,8 @@ struct Data {
 	unsigned int  device;		 // device id
 	unsigned int  offset;		 // channel offset
 	// BUFFERS
-	MY_TYPE* 	  ibuffer;		 // input buffer
-    MY_TYPE* 	  wavfile;	 // Wav File (interleaved)
+	float* 	  ibuffer;		 // input buffer
+    float* 	  wavfile;	 // Wav File (interleaved)
 };
 
 // Timestamp variables
