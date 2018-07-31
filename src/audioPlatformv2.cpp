@@ -141,12 +141,12 @@ void leave(RtAudio &adac, Data &userData) {
 void *task_AUDIOINOUT(void* arg) {
 	////// Testing Thread with counter mutex
 	int threadNum = *((int*)arg);
-	printf("hello world from AUDIO thread %d\n", threadNum);
+	printf("task_AUDIOINOUT running at thread %d\n", threadNum);
 	
 	// Demonstrate thread-safe Shared Variable assignment
 	pthread_mutex_lock( &mutex1 );
 	counter += 1;
-	printf("Counter value %d\n", counter);
+	printf("Thread counter value %d\n", counter);
 	pthread_mutex_unlock( &mutex1 );
 	
 	////// Audio Settings
@@ -400,7 +400,7 @@ void *task_AUDIOIN(void* arg) {
 void *task_AUDIOOUT(void* arg) {
 	////// OUTLINE : Testing Thread with counter mutex
 	int threadNum = *((int*)arg);
-	printf("hello world from AUDIO thread %d\n", threadNum);
+	printf("task_AUDIOOUT running at thread %d\n", threadNum);
 	
 	pthread_mutex_lock( &mutex1 );
 	counter += 1;
@@ -502,15 +502,9 @@ void *task_AUDIOOUT(void* arg) {
 }
 
 /////////////////////////////////////////////////////////////////////////////////
-void *task_PANTILTDEMO(void* arg) {
+void *task_PANTILTRAND(void* arg) {
 	int threadNum = *((int*)arg);
-	printf("hello world from PANTILT thread %d\n", threadNum);
-
-	// Demonstration of mutex locking for shared data between threads
-	pthread_mutex_lock( &mutex1 );
-	counter++;
-	printf("Counter value %d\n", counter);
-	pthread_mutex_unlock( &mutex1 );
+	printf("task_PANTILTRAND running at thread %d\n", threadNum);
 	
 	// OUTLINE : Setup PCA9685
 	int fd = pca9685Setup(PIN_BASE, 0x40, HERTZ);
@@ -531,14 +525,78 @@ void *task_PANTILTDEMO(void* arg) {
 	int pin; // selects which servo to send PWM to
 	int N = 10; // Number of iterations for demo
 	int N_servo = 4; // Number of servos to run
-	int pins[4] = {9, 8, 1, 0};
-	float num[N_servo];
+	int pins[4] = {9, 8, 1, 0}; // Order of channels to match calibration
+	float num[N_servo]; // milliseconds to set servos to
 	float max[N_servo]; 
 	float min[N_servo];
     float servoarray[N_servo][N];
     float servospan[N_servo];
-    float servoinc[N_servo];
     int ORIENTATION_DELAY = 1000; // ms between orientations
+    
+    // Set min and max values for servos from pre-program calibration
+	min[0] = servo0[0];
+    max[0] = servo0[2];
+	min[1] = servo1[0];
+    max[1] = servo1[1];
+	min[2] = servo8[0];
+    max[2] = servo8[2];
+	min[3] = servo9[0];
+    max[3] = servo9[1];
+
+
+	delay(3000);
+	
+// Random Orientations	
+	for(int jj = 0; jj < N; ++jj) { 
+		tic = current_timestamp();
+	    for(int ss = 0; ss < N_servo; ++ss) {	
+			float normrand = (float)rand()/(float)(RAND_MAX/1);
+			num[ss] = (normrand*(max[ss]-min[ss]))+min[ss];
+			printf(" : %1.4f : ",normrand);
+			pwmWrite(PIN_BASE + pins[ss], calcTicks(num[ss], HERTZ)); 
+		}
+		delay(ORIENTATION_DELAY);
+		toc = current_timestamp(tic);
+	}
+	pca9685PWMReset(fd);
+	delay(2000);
+	
+	return NULL;
+}
+
+
+/////////////////////////////////////////////////////////////////////////////////
+void *task_PANTILTITERATE(void* arg) {
+	int threadNum = *((int*)arg);
+	printf("task_PANTILTITERATE running at thread %d\n", threadNum);
+	
+	// OUTLINE : Setup PCA9685
+	int fd = pca9685Setup(PIN_BASE, 0x40, HERTZ);
+	if (fd < 0)
+	{
+		printf("Error in setup\n");
+		printf(" Error: %s \n", strerror(fd));
+		return NULL;
+	}
+
+	pca9685PWMReset(fd);
+	printf("Frequency is set to %d hertz\n", HERTZ);
+	printf("Returned fd value from setup is %d\n", fd);
+	
+	
+////
+	srand(time(0));
+	int pin; // selects which servo to send PWM to
+	int N = 10; // Number of iterations for demo
+	int N_servo = 4; // Number of servos to run
+	int pins[4] = {9, 8, 1, 0}; // Order of channels to match calibration
+	float num[N_servo]; // milliseconds to set servos to
+	float max[N_servo]; 
+	float min[N_servo];
+    float servoarray[N_servo][N]; // Stores all pulse widths before sending
+    float servospan[N_servo]; // max-min for each servo
+    float servoinc[N_servo]; // ms increment for iteration
+    int ORIENTATION_DELAY = 500; // ms between orientations
     
     // Set min and max values for servos from pre-program calibration
 	min[0] = servo0[0];
@@ -558,24 +616,8 @@ void *task_PANTILTDEMO(void* arg) {
 			servoarray[ss][jj] = max[ss]-servoinc[ss]*jj;
 		}
 	}
-////
 
-delay(3000);
-	
-// Random Orientations	
-	//~ for(int jj = 0; jj < N; ++jj) { 
-		//~ tic = current_timestamp();
-	    //~ for(int ss = 0; ss < N_servo; ++ss) {	
-			//~ float normrand = (float)rand()/(float)(RAND_MAX/1);
-			//~ num[ss] = (normrand*(max[ss]-min[ss]))+min[ss];
-			//~ printf(" : %1.4f : ",normrand);
-			//~ pwmWrite(PIN_BASE + pins[ss], calcTicks(num[ss], HERTZ)); 
-		//~ }
-		//~ delay(ORIENTATION_DELAY);
-		//~ toc = current_timestamp(tic);
-	//~ }
-	//~ pca9685PWMReset(fd);
-	//~ delay(2000);
+	delay(2000);
 	
 // Iterative Orientations
 	for(int jj = 0; jj < N; ++jj) { 
@@ -592,28 +634,50 @@ delay(3000);
 	return NULL;
 }
 
-
+void printHelp(){
+	printf("Program Use: \n\n");
+	printf("argv[1] : The index of the audio task to run\n");
+	printf("argv[2] : The index of the servo task to run\n");
+}
 
 //////////////////////////////////////////////////
 int main(int argc, char **argv)
 {	
 	// MULTITHREADING
 	int err;
-	int N_threads = 1;
+	// List of all defined tasks
+	func_ptr AudioTaskList[4] = {task_NULL, task_AUDIOIN, task_AUDIOOUT, task_AUDIOINOUT};
+	func_ptr ServoTaskList[3] = {task_NULL, task_PANTILTRAND, task_PANTILTITERATE};
+	int N_threads = 2; // Number of threads to run
+	int options[2] = {1,2}; // to load in user input & store defaults
 	pthread_t thread[N_threads];
-	//~ func_ptr tasks[N_threads] = {task_PANTILTDEMO,task_AUDIOIN}; // task_PANTILT
-	func_ptr tasks[N_threads] = {task_AUDIOIN};
-
 	
+	// Handle passed arguments
+	if(argc > 1 ) {
+		if(argc == 3) {
+			
+			// Load user inputs
+			options[0] = atoi(argv[1]);
+			options[1] = atoi(argv[2]);
+			
+		} else {
+			printHelp();
+			printf("Continuing with Defaults ...\n\n");
+		}
+	}
+	
+		
 	// OUTLINE : Wait for input to start
-	printf("This program will demonstrate the simultaneous use of the PWM driver and the RtAudio library\n");
+	printf("Ready to run Program\n");
 	WaitEnter();
 	
 	// Create Threads
-	for(int tt = 0; tt < N_threads; ++tt) {
-		if ((err = pthread_create(&thread[tt], NULL, tasks[tt], (void *)&thread[tt])) != 0) // Error occurs
-			printf("Thread creation failed: &s \n", strerror(err));	
-	}
+	// Audio Task
+	if ((err = pthread_create(&thread[0], NULL, AudioTaskList[atoi(argv[1])], (void *)&thread[0])) != 0) // Error occurs
+		printf("Thread creation failed: &s \n", strerror(err));	
+	// Servo Task
+	if ((err = pthread_create(&thread[1], NULL, ServoTaskList[atoi(argv[2])], (void *)&thread[1])) != 0) // Error occurs
+		printf("Thread creation failed: &s \n", strerror(err));	
 	
 	// Wait for threads to complete tasks
 	for(int tt = 0; tt < N_threads; ++tt) {
@@ -623,5 +687,6 @@ int main(int argc, char **argv)
 	// Done, Exit Program
 	printf("Program Complete, Exiting\n");
 	exit(EXIT_SUCCESS);
+	
 	return 0;
 }

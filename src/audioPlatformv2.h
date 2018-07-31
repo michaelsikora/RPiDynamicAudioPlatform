@@ -113,14 +113,19 @@ void leave( RtAudio &adc, Data &data );
 
 // Function to pause program and wait for user input
 inline void WaitEnter() { std::cout << "Press Enter to continue..."; while (std::cin.get()!='\n'); }
+void printHelp();
 
 // MAIN TASKS TO RUN
 typedef void* (*func_ptr)(void*); // Callback array for tasks
 void* task_AUDIOINOUT(void* arg);
 void* task_AUDIOIN(void* arg);
 void* task_AUDIOOUT(void* arg);
-void* task_PANTILTDEMO(void* arg);
 void* task_WAVREAD(void* arg);
+
+void* task_PANTILTRAND(void* arg);
+void* task_PANTILTITERATE(void* arg);
+
+void* task_NULL(void* arg){ return NULL; };
 
 // Main program, will run tasks in parallel
 int main(int argc, char **argv);

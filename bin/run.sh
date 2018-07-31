@@ -1,3 +1,3 @@
 #!/bin/bash
 
-./audioPlatformv2
+./audioPlatformv2 0 0
