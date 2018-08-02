@@ -7,7 +7,7 @@
         <meta name="viewport" content="width=device-width">
     </head>
     <body>
-       
+       <h1 style="font-family: 'Garamond';">RASPBERRY PI WEBSOCKET APP</h1>
         <div>
             <input type="text" id="messageinput"/>
         </div>
@@ -16,9 +16,18 @@
             <button type="button" onclick="send();" >Send</button>
             <button type="button" onclick="closeSocket();" >Close</button>
         </div>
+		<div>
+		<h2> Instructions </h2>
+		<ul>
+			<li>Connect all devices to same hotspot. I start a hotspot from my laptop which I connect the Raspberry PI to.</li>
+			<li> On the RPi navigate to /home/projects/audiotest/ and run the python script using the command "python3 app.py"</li>
+			<li> Find IP of RPi on the network. Using the above text box send "ws:/{IP OF PI}:8675</li>
+			<li> Send Message to select which programs to run</li>
+		</ul>
+		</div>
         <!-- Server responses get written here -->
         <div id="messages"></div>
-       
+		<div style="float: bottom;">Michael Sikora  m.sikora@uky.edu  2018.08.02</div>
         <!-- Script to utilise the WebSocket -->
         <script type="text/javascript">
                        

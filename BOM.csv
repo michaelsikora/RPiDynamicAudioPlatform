@@ -1,0 +1,5 @@
+﻿index,name,price,currency,quantity,chip manufacturer,distributor,link
+0,Raspberry Pi 3 Model B,40,USD,1,Raspberry Pi,Digikey,https://www.digikey.com/product-detail/en/raspberry-pi/RASPBERRY-PI-3/1690-1000-ND/6152799
+1,PCA9685,14.95,USD,1,Adafruit,Adafruit,https://www.adafruit.com/product/815
+2,Octo Soundcard,50,USD,1,Audio Injector,Amazon,https://www.amazon.com/Octo-channel-sound-card-Raspberry/dp/B06Y3PZ6MF
+3,Pan-Tilt,18.95,USD,2,Adafruit,Adafruit,https://www.adafruit.com/product/1967
