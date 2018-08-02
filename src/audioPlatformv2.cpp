@@ -37,7 +37,7 @@ int input( void * /*outputBuffer*/, void *inputBuffer, unsigned int nBufferFrame
   // LAST BUFFER BEFORE OVERFLOW  
   if ( (localData->iframeCounter + nBufferFrames) > localData->itotalFrames ) { // The next buffer will overflow
     frames = localData->itotalFrames - localData->iframeCounter; // Get number of frames to avoid overflow
-    localData->bufferBytes = frames * localData->ichannels * sizeof( float ); // Set non-overflow buffer size
+    localData->bufferBytes = frames * localData->ichannels * sizeof( MY_TYPE ); // Set non-overflow buffer size
   }
   
   // copy buffer from wavtable to output
@@ -80,7 +80,7 @@ int inout( void *outputBuffer, void *inputBuffer, unsigned int nBufferFrames,
   // LAST BUFFER BEFORE OVERFLOW
   if ( localData->oframeCounter + nBufferFrames > localData->ototalFrames) { // The next buffer will overflow
     frames = localData->ototalFrames - localData->oframeCounter; // Get number of frames to avoid overflow
-    localData->bufferBytes = frames * localData->ochannels * sizeof( float ); // Set non-overflow buffer size
+    localData->bufferBytes = frames * localData->ochannels * sizeof( MY_TYPE ); // Set non-overflow buffer size
   }
   
   //~ std::cout << " streamTime: " << streamTime << std::endl;
@@ -109,7 +109,7 @@ int outFromWav( void* outputBuffer, void* inputBuffer, unsigned int nBufferFrame
   // LAST BUFFER BEFORE OVERFLOW
   if ( localData->oframeCounter + nBufferFrames > localData->ototalFrames) { // The next buffer will overflow
     frames = localData->ototalFrames - localData->oframeCounter; // Get number of frames to avoid overflow
-    localData->bufferBytes = frames * localData->ochannels * sizeof( float ); // Set non-overflow buffer size
+    localData->bufferBytes = frames * localData->ochannels * sizeof( MY_TYPE ); // Set non-overflow buffer size
   }
   
   // copy buffer from wavtable to output
@@ -205,9 +205,9 @@ void *task_AUDIOINOUT(void* arg) {
 	
 	RtAudio::StreamOptions options; // For setting RtAudio built in stream options
 	userData.ibuffer = 0; userData.iframeCounter = 0;
-	userData.bufferBytes = userData.bufferFrames * userData.ichannels * sizeof( float );
+	userData.bufferBytes = userData.bufferFrames * userData.ichannels * sizeof( MY_TYPE );
 	userData.itotalFrames = (unsigned long) (userData.fs * userData.itotalTime);
-	userData.itotalBytes = userData.itotalFrames * userData.ichannels * sizeof( float );
+	userData.itotalBytes = userData.itotalFrames * userData.ichannels * sizeof( MY_TYPE );
 	userData.ototalFrames = (unsigned long) (userData.fs * userData.ototalTime);
 	
 	////// Read in Wav
@@ -216,7 +216,7 @@ void *task_AUDIOINOUT(void* arg) {
 	const char* filename = "../input/fswp300_12k_3ch.wav";
 	
 	userData.wavfile = 0;
-	//~ userData.wavfile = (float*) calloc( userData.ototalFrames, sizeof(float) );
+	//~ userData.wavfile = (float*) calloc( userData.ototalFrames, sizeof(MY_TYPE) );
 	
 	SndfileHandle file;
 	file = SndfileHandle(filename);
@@ -237,7 +237,7 @@ void *task_AUDIOINOUT(void* arg) {
 	//////////////	
 	
 	// Allocate the entire data buffer before starting stream.
-	userData.ibuffer = (float*) malloc( userData.itotalBytes  );
+	userData.ibuffer = (MY_TYPE*) malloc( userData.itotalBytes  );
 	if ( userData.ibuffer == 0 ) {
 		std::cout << "Memory allocation error ... quitting!\n";
 		leave(adc, userData);
@@ -275,7 +275,7 @@ void *task_AUDIOINOUT(void* arg) {
 	
 	// Now write the entire data to the file.
 	fp = fopen( filenames[0].c_str(), "wb" );
-	fwrite( userData.ibuffer, sizeof( float ), userData.itotalFrames * userData.ichannels, fp );
+	fwrite( userData.ibuffer, sizeof( MY_TYPE ), userData.itotalFrames * userData.ichannels, fp );
 	fclose( fp );
 	printf("Recording Complete\n");
 	
@@ -346,9 +346,9 @@ void *task_AUDIOIN(void* arg) {
 	RtAudio::StreamOptions options; // For setting RtAudio built in stream options
 	userData.ibuffer = 0; 
 	userData.iframeCounter = 0;
-	userData.bufferBytes = userData.bufferFrames * userData.ichannels * sizeof( float );
+	userData.bufferBytes = userData.bufferFrames * userData.ichannels * sizeof( MY_TYPE );
 	userData.itotalFrames = (unsigned long) (userData.fs * userData.itotalTime);
-	userData.itotalBytes = userData.itotalFrames * userData.ichannels * sizeof( float );
+	userData.itotalBytes = userData.itotalFrames * userData.ichannels * sizeof( MY_TYPE );
   
 	if(adc.isStreamOpen()) adc.closeStream(); // if an audio stream is already open close it
 		
@@ -387,7 +387,7 @@ void *task_AUDIOIN(void* arg) {
 	
 	// Now write the entire data to the file.
 	fp = fopen( filenames[0].c_str(), "wb" );
-	fwrite( userData.ibuffer, sizeof( float ), userData.itotalFrames * userData.ichannels, fp );
+	fwrite( userData.ibuffer, sizeof( MY_TYPE ), userData.itotalFrames * userData.ichannels, fp );
 	fclose( fp );
 	printf("Recording Complete\n");
 	
