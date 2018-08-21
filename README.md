@@ -71,7 +71,9 @@ Verification of dual Servo PWM over 3 meter snake cable
 " target="_blank"><img src="http://img.youtube.com/vi/nqSF_LqeNWM/0.jpg" 
 alt="PWM over 3 meter cable" width="240" height="180" border="10" /></a>
 
-<a href="https://www.youtube.com/watch?v=1Uhf23q1lOA" width="560" height="315" border="10"></a>
+<a href="https://www.youtube.com/watch?v=1Uhf23q1lOA">
+<img src="https://i9.ytimg.com/vi/1Uhf23q1lOA/mqdefault.jpg?sqp=CMCy79sF&rs=AOn4CLCAKxEJQ0S1Ya1qE5k9l17KKN8J7g&time=1534843299782"
+      width="240" height="180" border="10"></a>
 
 
 # Version Control
