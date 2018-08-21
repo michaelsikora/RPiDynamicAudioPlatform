@@ -1,0 +1,20 @@
+Michael Sikora m.sikora@uky.edu
+2018.08.05
+
+List of setups for recording audio
+
+
+Parameters that define a recording setup:
+
+Platforms
+	P1_location
+	P2_location
+	P1_orientation
+	P2_orientation
+	
+Audio Channel mappings to recorded channel order
+
+Source
+	S1_location =  { center }
+	S1_signal = { white noise, frequency sweep, male voice, female voice }
+	

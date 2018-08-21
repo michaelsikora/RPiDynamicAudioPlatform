@@ -102,3 +102,6 @@ Error can be recreated by running program with AUDIOINOUT task once. Then,
 running the program a second time. The error regularly occurs on the second
 run. Running the program again sometimes gives no error.
  
+ 
+# Websocket
+A python app was started to interface to the c program over a websocket. At time of writing the Audio threads do not record correctly when run from the python subprocess.
